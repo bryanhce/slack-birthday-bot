@@ -1,0 +1,58 @@
+service: slack-birthday-bot
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: ap-southeast-1
+  environment:
+  # SLACK_BOT_TOKEN: ${env:SLACK_BOT_TOKEN}
+  # SLACK_SIGNING_SECRET: ${env:SLACK_SIGNING_SECRET}
+    DYNAMODB_TABLE: ${self:custom.dynamodb_table}
+
+functions:
+  slackCommand:
+    handler: src/slackCommand.handler
+    memorySize: 128            # in MB
+    ephemeralStorageSize: 512 # in MB
+    timeout: 5 # in seconds
+    events:
+      - http:
+          path: slack
+          method: post
+  # birthdayChecker:
+  #   handler: src/birthdayChecker.handler
+  #   events:
+  #     - schedule: cron(0 8 * * ? *)
+
+plugins:
+  - serverless-esbuild
+
+custom:
+  esbuild:
+    bundle: true
+    minify: false
+    sourcemap: true
+    exclude: ['aws-sdk']
+    target: 'node20'
+    platform: 'node'
+  dynamodb_table: 'birthdays' # declaring a custom variable
+
+resources:
+  Resources:
+    BirthdaysTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.dynamodb_table}
+        AttributeDefinitions:
+          - AttributeName: user_id
+            AttributeType: S
+          - AttributeName: name
+            AttributeType: S
+        KeySchema:
+          - AttributeName: user_id
+            KeyType: HASH
+          - AttributeName: name
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
+

@@ -4,7 +4,7 @@ import { SlackCommand } from "./types";
 import { handleAddCommand } from "./handlers/addCommand";
 import { createErrorResponse } from "./responses/responses";
 
-export async function commandHandler(
+export async function handler(
   event: APIGatewayProxyEvent,
 ): Promise<APIGatewayProxyResult> {
   try {
