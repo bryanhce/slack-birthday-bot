@@ -3,7 +3,7 @@ import { BirthdayRepository } from "../repository/dynamodb";
 import { createErrorResponse, createSuccessResponse } from "../responses/responses";
 import { Birthday, SlackCommand } from "../types";
 
-const repository = new BirthdayRepository(); // TODO make this a singleton repository
+const repository = BirthdayRepository.getInstance();
 
 export const handleAddCommand = async (command: SlackCommand) => {
   const parsed = parseAddCommand(command.text);

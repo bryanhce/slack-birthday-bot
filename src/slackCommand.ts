@@ -4,6 +4,7 @@ import { SlackCommand } from "./types";
 import { handleAddCommand } from "./handlers/addCommand";
 import { createErrorResponse } from "./responses/responses";
 import { handleListCommand } from "./handlers/listCommand";
+import { handleRemoveCommand } from "./handlers/removeCommand";
 
 // TODO add proper logging 
 export async function handler(
@@ -23,8 +24,8 @@ export async function handler(
             return await handleAddCommand(command)
         case '/list-all':
             return await handleListCommand(command)
-        // case '/remove':
-        //     return await handleRemoveCommand(command)
+        case '/remove-bday':
+            return await handleRemoveCommand(command)
         default:
             return createErrorResponse('Unknown command')
     }

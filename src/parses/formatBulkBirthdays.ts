@@ -56,7 +56,7 @@ export function formatBirthtdays(birthdays: Birthday[]): string {
           return `- ${name}: ${shortMonth} ${parseInt(dd, 10)}`;
         });
 
-      return `${fullMonthName}\n${lines.join("\n")}`;
+      return `*${fullMonthName}*\n${lines.join("\n")}`;
     });
 
   return formatted.join("\n\n");

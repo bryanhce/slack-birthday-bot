@@ -1,6 +1,8 @@
+import { Birthday } from "../types";
+
 export function parseAddCommand(
   text: string,
-): { name: string; date: string } | null {
+): Omit<Birthday, 'user_id'> | null {
   // Expected format: "namePart1 namePartN #MM-DD"
   const parts = text.trim().split(/\#/);
   if (parts.length !== 2) return null;
@@ -10,6 +12,10 @@ export function parseAddCommand(
   if (!isValidDate(datePart)) return null;
 
   return { name: namePart.trim(), date: datePart.trim() };
+}
+
+export function parseRemoveCommand(text: string): string | null {
+  return text.trim();
 }
 
 // TODO move out of this function if it is being used in other places

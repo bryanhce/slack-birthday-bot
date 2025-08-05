@@ -3,7 +3,7 @@ import { createErrorResponse, createSuccessResponse } from "../responses/respons
 import { SlackCommand } from "../types";
 import { formatBirthtdays } from "../parses/formatBulkBirthdays";
 
-const repository = new BirthdayRepository();
+const repository = BirthdayRepository.getInstance();
 
 export async function handleListCommand(command: SlackCommand) {
   const userId = command.user_id;

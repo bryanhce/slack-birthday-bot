@@ -14,6 +14,17 @@ const docClient = DynamoDBDocumentClient.from(client);
 const TABLE_NAME = process.env.DYNAMODB_TABLE!;
 
 export class BirthdayRepository {
+  private static instance: BirthdayRepository;
+
+  private constructor() {}
+
+  public static getInstance() {
+    if (!BirthdayRepository.instance) {
+      BirthdayRepository.instance = new BirthdayRepository();
+    }
+    return BirthdayRepository.instance;
+  }
+
   async addBirthday(birthday: Birthday) {
     const command = new PutCommand({
       TableName: TABLE_NAME,
