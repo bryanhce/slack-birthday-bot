@@ -42,6 +42,7 @@ resources:
   Resources:
     BirthdaysTable:
       Type: AWS::DynamoDB::Table
+      DeletionPolicy: Retain # keeps table data instead of destroying on new deploy
       Properties:
         TableName: ${self:custom.dynamodb_table}
         AttributeDefinitions:

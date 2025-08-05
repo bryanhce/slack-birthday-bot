@@ -3,10 +3,11 @@ import { BirthdayRepository } from "../repository/dynamodb";
 import { createErrorResponse, createSuccessResponse } from "../responses/responses";
 import { Birthday, SlackCommand } from "../types";
 
-const repository = new BirthdayRepository();
+const repository = new BirthdayRepository(); // TODO make this a singleton repository
 
 export const handleAddCommand = async (command: SlackCommand) => {
   const parsed = parseAddCommand(command.text);
+  // TODO need to validate the dates
 
   if (!parsed) {
     return createErrorResponse("Invalid format. Use `/add name #MM-DD`");
