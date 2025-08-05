@@ -9,9 +9,10 @@ export function parseAddCommand(
 
   if (!isValidDate(datePart)) return null;
 
-  return { name: namePart, date: datePart };
+  return { name: namePart.trim(), date: datePart.trim() };
 }
 
+// TODO move out of this function if it is being used in other places
 export function isValidDate(dateString: string): boolean {
   const regex = /^\d{2}-\d{2}$/;
   if (!regex.test(dateString)) return false;

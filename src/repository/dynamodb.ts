@@ -36,7 +36,6 @@ export class BirthdayRepository {
     return result.Item as Birthday | undefined;
   }
 
-  // --- CORRECTED METHOD ---
   async getAllBirthdays(userId: string) {
     const command = new QueryCommand({
       TableName: TABLE_NAME,
