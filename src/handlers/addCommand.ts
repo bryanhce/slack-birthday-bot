@@ -5,7 +5,7 @@ import { repository } from '../repository/dynamodb';
 import {
   createErrorResponse,
   createSuccessResponse,
-} from '../responses/responses';
+} from '../slackInterface/responses';
 import { Birthday, SlackCommand } from '../types';
 
 const handleAddCommand = async (command: SlackCommand) => {

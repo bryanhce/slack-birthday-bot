@@ -4,7 +4,7 @@ import { repository } from '../repository/dynamodb';
 import {
   createErrorResponse,
   createSuccessResponse,
-} from '../responses/responses';
+} from '../slackInterface/responses';
 import { SlackCommand } from '../types';
 
 async function handleRemoveCommand(command: SlackCommand) {

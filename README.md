@@ -1,7 +1,9 @@
 # Slack brithday reminder bot
+
 TODO fill up
 
 # Architecture
+
 TODO fill up
 
 # Functional Requirements
@@ -44,3 +46,5 @@ TODO fill up
 - Airbnb ESLint discourages for loops in favour of functional array methods beacuse:
   - bundle size of for loops requires polyfills in older environments
   - prefer functional programming, use methods like `.forEach(), .map(), .reduce()`
+
+- Use `Object.entries(record)` to iterate over key-value pairs eg type of `Record<string, string>`

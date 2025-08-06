@@ -2,7 +2,7 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 
 import { SlackCommand } from './types';
 import handleAddCommand from './handlers/addCommand';
-import { createErrorResponse } from './responses/responses';
+import { createErrorResponse } from './slackInterface/responses';
 import handleListCommand from './handlers/listCommand';
 import handleRemoveCommand from './handlers/removeCommand';
 import { logger } from './logger/logger';

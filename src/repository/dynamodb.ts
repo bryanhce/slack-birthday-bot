@@ -10,7 +10,19 @@ import {
 import { Birthday } from '../types';
 
 const client = new DynamoDBClient({});
-const docClient = DynamoDBDocumentClient.from(client);
+const marshallOptions = {
+  convertEmptyValues: false,
+  removeUndefinedValues: true,
+  convertClassInstanceToMap: false,
+};
+const unmarshallOptions = {
+  wrapNumbers: false,
+};
+const docClient = DynamoDBDocumentClient.from(client, {
+  marshallOptions,
+  unmarshallOptions,
+});
+// const docClient = DynamoDBDocumentClient.from(client);
 const TABLE_NAME = process.env.DYNAMODB_TABLE!;
 
 /* eslint-disable class-methods-use-this */
@@ -59,7 +71,27 @@ class BirthdayRepository {
     });
 
     const result = await docClient.send(command);
-    return result.Items as Birthday[];
+    return (result.Items as Birthday[]) || [];
+  }
+
+  async getBirthdaysByDate(date: string) {
+    const command = new QueryCommand({
+      TableName: TABLE_NAME,
+      IndexName: 'DateIndex',
+      // where clause of query, #dt is a placeholder for attribute name, can't directly
+      // use date here as date is a reserved keyword.
+      // :dt is placeholder for value
+      KeyConditionExpression: '#dt = :dt',
+      ExpressionAttributeNames: {
+        '#dt': 'date',
+      },
+      ExpressionAttributeValues: {
+        ':dt': date,
+      },
+    });
+
+    const result = await docClient.send(command);
+    return (result.Items as Birthday[]) || [];
   }
 
   async removeBirthday(userId: string, name: string) {

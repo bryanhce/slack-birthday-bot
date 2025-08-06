@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
+    "infra build": "npx serverless package",
     "deploy": "npm run build && serverless deploy",
     "test": "jest",
     "lint": "eslint . --ext .ts",
@@ -16,6 +17,7 @@
     "@aws-sdk/client-dynamodb": "^3.859.0",
     "@aws-sdk/lib-dynamodb": "^3.859.0",
     "@slack/bolt": "^3.14.0",
+    "@slack/web-api": "^7.9.3",
     "aws-lambda": "^1.0.7",
     "aws-sdk": "^2.1490.0",
     "crypto": "^1.0.1"

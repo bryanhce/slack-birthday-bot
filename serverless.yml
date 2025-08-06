@@ -1,14 +1,26 @@
 service: slack-birthday-bot
 frameworkVersion: '3'
+useDotenv: true
 
 provider:
   name: aws
   runtime: nodejs20.x
   region: ap-southeast-1
   environment:
-    # SLACK_BOT_TOKEN: ${env:SLACK_BOT_TOKEN}
+    SLACK_BOT_TOKEN: ${env:SLACK_BOT_TOKEN}
     # SLACK_SIGNING_SECRET: ${env:SLACK_SIGNING_SECRET}
     DYNAMODB_TABLE: ${self:custom.dynamodb_table}
+    # TODO
+  # iamRoleStatements:
+  #   - Effect: Allow
+  #     Action:
+  #       - dynamodb:Query
+  #       - dynamodb:Scan
+  #       - dynamodb:GetItem
+  #       - dynamodb:PutItem
+  #       - dynamodb:UpdateItem
+  #       - dynamodb:DeleteItem
+  #     Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
 
 functions:
   slackCommand:
@@ -20,10 +32,13 @@ functions:
       - http:
           path: slack
           method: post
-  # birthdayChecker:
-  #   handler: src/birthdayChecker.handler
-  #   events:
-  #     - schedule: cron(0 8 * * ? *)
+  sameDayBirthdayReminder:
+    handler: src/sameDayReminder.default
+    memorySize: 128
+    ephemeralStorageSize: 512
+    timeout: 5
+    events:
+      - schedule: cron(0 8 * * ? *)
 
 plugins:
   - serverless-esbuild
@@ -50,9 +65,18 @@ resources:
             AttributeType: S
           - AttributeName: name
             AttributeType: S
+          - AttributeName: date
+            AttributeType: S
         KeySchema:
           - AttributeName: user_id
             KeyType: HASH
           - AttributeName: name
             KeyType: RANGE
+        GlobalSecondaryIndexes:
+          - IndexName: DateIndex
+            KeySchema:
+              - AttributeName: date
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
         BillingMode: PAY_PER_REQUEST

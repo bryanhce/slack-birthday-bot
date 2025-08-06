@@ -30,8 +30,17 @@ const shortMonthNames = [
   'Dec',
 ];
 
-// assume birthdays are all for 1 user
-function formatBirthtdays(birthdays: Birthday[]): string {
+/**
+ * Assume birthdays are all for 1 user
+ * @param birthdays 
+ * @returns formatted birthday string
+ * Looks like
+ * January
+    - test : Jan 1
+    December
+    - another test: Dec 9
+ */
+export function formatBirthtdaysByMonth(birthdays: Birthday[]): string {
   const grouped: Record<
     string,
     Array<Omit<Birthday, 'user_id'>>
@@ -67,4 +76,12 @@ function formatBirthtdays(birthdays: Birthday[]): string {
   return formatted.join('\n\n');
 }
 
-export default formatBirthtdays;
+/**
+ * Assume all birthdays are same here
+ * @param birthdays
+ */
+export function formatBirthdayByDay(birthdays: Birthday[]): string {
+  return birthdays
+    .map((bday) => `🥳 It's ${bday.name}'s birthday today!`)
+    .join('\n');
+}
