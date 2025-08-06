@@ -1,4 +1,4 @@
-import { parseRemoveCommand } from "../parses/parseAddCommand";
+import { parseRemoveCommand } from "../helpers/parseAddCommand";
 import { BirthdayRepository } from "../repository/dynamodb";
 import {
   createErrorResponse,
@@ -11,7 +11,9 @@ const repository = BirthdayRepository.getInstance();
 export async function handleRemoveCommand(command: SlackCommand) {
   const parsed = parseRemoveCommand(command.text);
   if (!parsed) {
-    return createErrorResponse("Invalid format. Use `/remove name`, name cannot be empty");
+    return createErrorResponse(
+      "Invalid format. Use `/remove name`, name cannot be empty",
+    );
   }
 
   try {

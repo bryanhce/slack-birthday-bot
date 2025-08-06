@@ -1,7 +1,10 @@
 import { BirthdayRepository } from "../repository/dynamodb";
-import { createErrorResponse, createSuccessResponse } from "../responses/responses";
+import {
+  createErrorResponse,
+  createSuccessResponse,
+} from "../responses/responses";
 import { SlackCommand } from "../types";
-import { formatBirthtdays } from "../parses/formatBulkBirthdays";
+import { formatBirthtdays } from "../helpers/formatBulkBirthdays";
 
 const repository = BirthdayRepository.getInstance();
 

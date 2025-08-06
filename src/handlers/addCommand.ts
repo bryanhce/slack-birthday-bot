@@ -1,6 +1,9 @@
-import { parseAddCommand } from "../parses/parseAddCommand";
+import { parseAddCommand } from "../helpers/parseAddCommand";
 import { BirthdayRepository } from "../repository/dynamodb";
-import { createErrorResponse, createSuccessResponse } from "../responses/responses";
+import {
+  createErrorResponse,
+  createSuccessResponse,
+} from "../responses/responses";
 import { Birthday, SlackCommand } from "../types";
 
 const repository = BirthdayRepository.getInstance();
