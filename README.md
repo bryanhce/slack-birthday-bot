@@ -1,14 +1,16 @@
 # Slack brithday reminder bot
+TODO fill up
 
 # Architecture
+TODO fill up
 
 # Functional Requirements
 
 ## Slack commands
 
 - /add
-- /list
-- /remove
+- /list-all
+- /remove-bday
 
 ## Cron jobs
 

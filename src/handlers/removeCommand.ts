@@ -21,7 +21,7 @@ async function handleRemoveCommand(command: SlackCommand) {
       name
     );
     if (!birthdayRecordExist) {
-      return createSuccessResponse(`🫠 Birthday for ${name} is does not exist`);
+      return createSuccessResponse(`🫠 Birthday for ${name} does not exist...`);
     }
 
     await repository.removeBirthday(command.user_id, name);
