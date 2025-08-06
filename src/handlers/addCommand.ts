@@ -1,19 +1,19 @@
-import { parseAddCommand } from "../helpers/parseAddCommand";
-import { BirthdayRepository } from "../repository/dynamodb";
+import { parseAddCommand } from '../helpers/commandParsers';
+import BirthdayRepository from '../repository/dynamodb';
 import {
   createErrorResponse,
   createSuccessResponse,
-} from "../responses/responses";
-import { Birthday, SlackCommand } from "../types";
+} from '../responses/responses';
+import { Birthday, SlackCommand } from '../types';
 
 const repository = BirthdayRepository.getInstance();
 
-export const handleAddCommand = async (command: SlackCommand) => {
+const handleAddCommand = async (command: SlackCommand) => {
   const parsed = parseAddCommand(command.text);
   // TODO need to validate the dates
 
   if (!parsed) {
-    return createErrorResponse("Invalid format. Use `/add name #MM-DD`");
+    return createErrorResponse('Invalid format. Use `/add name #MM-DD`');
   }
 
   const { date, name } = parsed;
@@ -31,10 +31,12 @@ export const handleAddCommand = async (command: SlackCommand) => {
   try {
     await repository.addBirthday(birthday);
     return createSuccessResponse(
-      `🎉 ${name}'s birthday has been added for ${date}!`,
+      `🎉 ${name}'s birthday has been added for ${date}!`
     );
   } catch (error) {
-    console.error("Error adding birthday:", error);
-    return createErrorResponse("Failed to add birthday. Please try again.");
+    console.error('Error adding birthday:', error);
+    return createErrorResponse('Failed to add birthday. Please try again.');
   }
 };
+
+export default handleAddCommand;

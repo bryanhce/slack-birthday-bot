@@ -1,21 +1,23 @@
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import {
   PutCommand,
   GetCommand,
   DeleteCommand,
   QueryCommand,
   DynamoDBDocumentClient,
-} from "@aws-sdk/lib-dynamodb";
+} from '@aws-sdk/lib-dynamodb';
 
-import { Birthday } from "../types";
+import { Birthday } from '../types';
 
 const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
 const TABLE_NAME = process.env.DYNAMODB_TABLE!;
 
-export class BirthdayRepository {
+/* eslint-disable class-methods-use-this */
+class BirthdayRepository {
   private static instance: BirthdayRepository;
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   private constructor() {}
 
   public static getInstance() {
@@ -50,9 +52,9 @@ export class BirthdayRepository {
   async getAllBirthdays(userId: string) {
     const command = new QueryCommand({
       TableName: TABLE_NAME,
-      KeyConditionExpression: "user_id = :userId",
+      KeyConditionExpression: 'user_id = :userId',
       ExpressionAttributeValues: {
-        ":userId": userId,
+        ':userId': userId,
       },
     });
 
@@ -72,3 +74,6 @@ export class BirthdayRepository {
     return docClient.send(command);
   }
 }
+/* eslint-enable class-methods-use-this */
+
+export default BirthdayRepository;

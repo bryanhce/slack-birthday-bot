@@ -1,11 +1,11 @@
-import { Birthday } from "../types";
-import { isValidDate } from "./dateValidator";
+import { Birthday } from '../types';
+import isValidDate from './dateValidator';
 
 export function parseAddCommand(
-  text: string,
-): Omit<Birthday, "user_id"> | null {
+  text: string
+): Omit<Birthday, 'user_id'> | null {
   // Expected format: "namePart1 namePartN #MM-DD"
-  const parts = text.trim().split(/\#/);
+  const parts = text.trim().split(/#/);
   if (parts.length !== 2) return null;
 
   const [namePart, datePart] = parts;

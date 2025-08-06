@@ -6,7 +6,11 @@
   "scripts": {
     "build": "tsc",
     "deploy": "npm run build && serverless deploy",
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "format": "prettier --check .",
+    "format:fix": "prettier --write ."
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.859.0",
@@ -19,6 +23,14 @@
   "devDependencies": {
     "@types/aws-lambda": "^8.10.126",
     "@types/node": "^20.8.7",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "eslint": "^8.57.1",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^18.0.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-prettier": "^5.5.3",
     "serverless": "^3.36.0",
     "serverless-esbuild": "^1.55.1",
     "serverless-plugin-typescript": "^2.1.4",

@@ -6,14 +6,14 @@ provider:
   runtime: nodejs20.x
   region: ap-southeast-1
   environment:
-  # SLACK_BOT_TOKEN: ${env:SLACK_BOT_TOKEN}
-  # SLACK_SIGNING_SECRET: ${env:SLACK_SIGNING_SECRET}
+    # SLACK_BOT_TOKEN: ${env:SLACK_BOT_TOKEN}
+    # SLACK_SIGNING_SECRET: ${env:SLACK_SIGNING_SECRET}
     DYNAMODB_TABLE: ${self:custom.dynamodb_table}
 
 functions:
   slackCommand:
-    handler: src/slackCommand.handler
-    memorySize: 128            # in MB
+    handler: src/slackCommand.default # if want to use src/slackCommand.handler, need to use named exports in file
+    memorySize: 128 # in MB
     ephemeralStorageSize: 512 # in MB
     timeout: 5 # in seconds
     events:
@@ -56,4 +56,3 @@ resources:
           - AttributeName: name
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
-
