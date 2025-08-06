@@ -1,12 +1,11 @@
 import { parseRemoveCommand } from '../helpers/commandParsers';
-import BirthdayRepository from '../repository/dynamodb';
+import { logger } from '../logger/logger';
+import { repository } from '../repository/dynamodb';
 import {
   createErrorResponse,
   createSuccessResponse,
 } from '../responses/responses';
 import { SlackCommand } from '../types';
-
-const repository = BirthdayRepository.getInstance();
 
 async function handleRemoveCommand(command: SlackCommand) {
   const parsed = parseRemoveCommand(command.text);
@@ -20,7 +19,7 @@ async function handleRemoveCommand(command: SlackCommand) {
     await repository.removeBirthday(command.user_id, parsed);
     return createSuccessResponse(`🚯 Deleted ${parsed}'s birthday`);
   } catch (error) {
-    console.error('Error removing birthday:', error);
+    logger.error('Error removing birthday', error);
     return createErrorResponse('Failed to remove birthday. Please try again.');
   }
 }

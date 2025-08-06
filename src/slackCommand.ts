@@ -5,8 +5,8 @@ import handleAddCommand from './handlers/addCommand';
 import { createErrorResponse } from './responses/responses';
 import handleListCommand from './handlers/listCommand';
 import handleRemoveCommand from './handlers/removeCommand';
+import { logger } from './logger/logger';
 
-// TODO add proper logging
 async function handler(
   event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> {
@@ -27,10 +27,11 @@ async function handler(
       case '/remove-bday':
         return await handleRemoveCommand(command);
       default:
+        logger.warn('No command')
         return createErrorResponse('Unknown command');
     }
   } catch (error) {
-    console.error('Error in slackCommand:', error);
+    logger.error('Error in slackCommand', error)
     return {
       statusCode: 500,
       body: 'Internal Server Error',

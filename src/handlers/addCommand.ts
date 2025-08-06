@@ -1,13 +1,12 @@
 import { parseAddCommand } from '../helpers/commandParsers';
 import isValidDate from '../helpers/dateValidator';
-import BirthdayRepository from '../repository/dynamodb';
+import { logger } from '../logger/logger';
+import { repository } from '../repository/dynamodb';
 import {
   createErrorResponse,
   createSuccessResponse,
 } from '../responses/responses';
 import { Birthday, SlackCommand } from '../types';
-
-const repository = BirthdayRepository.getInstance();
 
 const handleAddCommand = async (command: SlackCommand) => {
   const parsed = parseAddCommand(command.text);
@@ -37,7 +36,7 @@ const handleAddCommand = async (command: SlackCommand) => {
       `🎉 ${name}'s birthday has been added for ${date}!`
     );
   } catch (error) {
-    console.error('Error adding birthday:', error);
+    logger.error('Error adding birthday', error)
     return createErrorResponse('Failed to add birthday. Please try again.');
   }
 };

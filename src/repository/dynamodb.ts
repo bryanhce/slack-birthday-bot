@@ -76,4 +76,5 @@ class BirthdayRepository {
 }
 /* eslint-enable class-methods-use-this */
 
-export default BirthdayRepository;
+// eslint-disable-next-line import/prefer-default-export
+export const repository = BirthdayRepository.getInstance();
