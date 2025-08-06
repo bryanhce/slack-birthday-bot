@@ -36,7 +36,7 @@ const handleAddCommand = async (command: SlackCommand) => {
       `🎉 ${name}'s birthday has been added for ${date}!`
     );
   } catch (error) {
-    logger.error('Error adding birthday', error)
+    logger.error('Error adding birthday', error);
     return createErrorResponse('Failed to add birthday. Please try again.');
   }
 };

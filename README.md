@@ -17,6 +17,10 @@
 
 # How to run
 
+## App
+
+- `npm run deploy` - to deploy code on local to dev env
+
 ## For infrastructure
 
 - `npx serverless package` - to test locally, compiles and bundles app into `.esbuild/.serverless/` for inspection and also compiles the code to `.esbuild/.build`. Everytime code change, need to rerun this command.

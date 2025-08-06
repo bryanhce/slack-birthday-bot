@@ -27,11 +27,11 @@ async function handler(
       case '/remove-bday':
         return await handleRemoveCommand(command);
       default:
-        logger.warn('No command')
+        logger.warn('No command');
         return createErrorResponse('Unknown command');
     }
   } catch (error) {
-    logger.error('Error in slackCommand', error)
+    logger.error('Error in slackCommand', error);
     return {
       statusCode: 500,
       body: 'Internal Server Error',
