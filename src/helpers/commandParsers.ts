@@ -1,5 +1,4 @@
 import { Birthday } from '../types';
-import isValidDate from './dateValidator';
 
 export function parseAddCommand(
   text: string
@@ -9,8 +8,6 @@ export function parseAddCommand(
   if (parts.length !== 2) return null;
 
   const [namePart, datePart] = parts;
-
-  if (!isValidDate(datePart)) return null;
 
   return { name: namePart.trim(), date: datePart.trim() };
 }

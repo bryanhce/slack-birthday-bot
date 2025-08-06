@@ -1,4 +1,5 @@
 import { parseAddCommand } from '../helpers/commandParsers';
+import isValidDate from '../helpers/dateValidator';
 import BirthdayRepository from '../repository/dynamodb';
 import {
   createErrorResponse,
@@ -10,13 +11,15 @@ const repository = BirthdayRepository.getInstance();
 
 const handleAddCommand = async (command: SlackCommand) => {
   const parsed = parseAddCommand(command.text);
-  // TODO need to validate the dates
-
   if (!parsed) {
     return createErrorResponse('Invalid format. Use `/add name #MM-DD`');
   }
 
   const { date, name } = parsed;
+  if (!isValidDate(date)) {
+    return createErrorResponse('Invalid birthday date. Follow #MM-DD');
+  }
+
   const existing = await repository.getBirthday(command.user_id, name);
   if (existing) {
     return createErrorResponse(`Birthday for ${name} is already registered.`);
