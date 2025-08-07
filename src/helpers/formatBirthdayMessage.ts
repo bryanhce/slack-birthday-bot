@@ -86,9 +86,15 @@ export function formatBirthdayByDay(birthdays: Birthday[]): string {
     .join('\n');
 }
 
-export function prependUserName(
-  originalText: string,
-  userName: string
-): string {
-  return `Hello <@${userName}>!\n${originalText}`;
+function prependText(newText: string, original: string): string {
+  return `${newText}\n${original}`;
 }
+
+export function prependUserName(
+  userName: string,
+  originalText: string
+): string {
+  return prependText(`Hello <@${userName}>`, originalText);
+}
+
+

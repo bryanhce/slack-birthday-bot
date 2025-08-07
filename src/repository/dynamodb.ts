@@ -9,6 +9,7 @@ import {
 } from '@aws-sdk/lib-dynamodb';
 
 import { Birthday } from '../types';
+import BirthdayQueryOptionsByDate from './types';
 
 const client = new DynamoDBClient({});
 const marshallOptions = {
@@ -74,27 +75,35 @@ class BirthdayRepository {
     return (result.Items as Birthday[]) || [];
   }
 
-  async getBirthdaysByDate(month: string, day?: string) {
+  async getBirthdaysByDate(options: BirthdayQueryOptionsByDate) {
+    const { month, day } = options;
+
+    const keyConditions: string[] = [];
+    const attributeNames: Record<string, string> = {};
+    const attributeValues: Record<string, string> = {};
+
+    // month is a required option
+    keyConditions.push('#mt = :mt');
+    attributeNames['#mt'] = 'month';
+    attributeValues[':mt'] = month;
+
+    if (day) {
+      // where clause of query
+      // #d is a placeholder for attribute name
+      // :d is placeholder for value
+      keyConditions.push('#d = :d');
+      attributeNames['#d'] = 'day';
+      attributeValues[':d'] = day;
+    }
+
     const params: QueryCommandInput = {
       TableName: TABLE_NAME,
       IndexName: 'MonthDayIndex',
-      // where clause of query
-      // #mt is a placeholder for attribute name
-      // :mt is placeholder for value
-      KeyConditionExpression: '#mt = :mt',
-      ExpressionAttributeNames: {
-        '#mt': 'month',
-      },
-      ExpressionAttributeValues: {
-        ':mt': month,
-      },
+      KeyConditionExpression: keyConditions.join(' AND '),
+      ExpressionAttributeNames: attributeNames,
+      ExpressionAttributeValues: attributeValues,
     };
 
-    if (day) {
-      params.KeyConditionExpression += ' AND #d = :d';
-      params.ExpressionAttributeNames!['#d'] = 'day';
-      params.ExpressionAttributeValues![':d'] = day;
-    }
     const command = new QueryCommand(params);
     const result = await docClient.send(command);
     return (result.Items as Birthday[]) || [];

@@ -1,3 +1,5 @@
+import BirthdayQueryOptionsByDate from './repository/types';
+
 // Left the other fields in the event we might want to use in the future
 export type SlackCommand = {
   userId: string;
@@ -20,4 +22,11 @@ export type Birthday = {
   userId: string;
   userName: string;
   channelId: string;
+};
+
+export type ReminderConfig = {
+  reminderType: 'daily' | 'monthly';
+  getDateArgs: () => BirthdayQueryOptionsByDate;
+  formatMessage: (birthdays: Birthday[]) => string;
+  getDateLogString: (args: BirthdayQueryOptionsByDate) => string;
 };
