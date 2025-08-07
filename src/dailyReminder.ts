@@ -5,13 +5,7 @@ import sendBirthdayReminders from './baseReminder';
 
 const dailyReminderConfig: ReminderConfig = {
   reminderType: 'daily',
-  getDateArgs: () => {
-    const [month, day] = dateToday();
-    return {
-      month,
-      day,
-    };
-  },
+  getDateArgs: dateToday,
   formatMessage: formatBirthdayByDay,
   getDateLogString: (args) => `${args.month}-${args.day}`,
 };

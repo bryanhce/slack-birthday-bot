@@ -1,11 +1,12 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 
 import { SlackCommand } from './types';
-import handleAddCommand from './handlers/addCommand';
+import { logger } from './logger/logger';
 import { createErrorResponse } from './slackInterface/responses';
+import handleAddCommand from './handlers/addCommand';
 import handleListCommand from './handlers/listCommand';
 import handleRemoveCommand from './handlers/removeCommand';
-import { logger } from './logger/logger';
+import handleListMonthCommand from './handlers/listMonthCommand';
 
 async function handler(
   event: APIGatewayProxyEvent
@@ -26,6 +27,8 @@ async function handler(
         return await handleAddCommand(command);
       case '/list-all':
         return await handleListCommand(command);
+      case '/list-month':
+        return await handleListMonthCommand(command);
       case '/remove-bday':
         return await handleRemoveCommand(command);
       default:

@@ -26,6 +26,8 @@ const docClient = DynamoDBDocumentClient.from(client, {
 });
 const TABLE_NAME = process.env.DYNAMODB_TABLE!;
 
+// TODO improve the naming and see if we can make the methods more extensible
+
 /* eslint-disable class-methods-use-this */
 class BirthdayRepository {
   private static instance: BirthdayRepository;
@@ -75,6 +77,25 @@ class BirthdayRepository {
     return (result.Items as Birthday[]) || [];
   }
 
+  // TODO have to improve name
+  async getBirthdaysByUserByMonth(userId: string, month: string) {
+    const command = new QueryCommand({
+      TableName: TABLE_NAME,
+      KeyConditionExpression: 'userId = :userId',
+      FilterExpression: '#mt = :mt',
+      ExpressionAttributeValues: {
+        ':userId': userId,
+        ':mt': month,
+      },
+      ExpressionAttributeNames: {
+        '#mt': 'month',
+      },
+    });
+
+    const result = await docClient.send(command);
+    return (result.Items as Birthday[]) || [];
+  }
+
   async getBirthdaysByDate(options: BirthdayQueryOptionsByDate) {
     const { month, day } = options;
 
@@ -83,14 +104,13 @@ class BirthdayRepository {
     const attributeValues: Record<string, string> = {};
 
     // month is a required option
-    keyConditions.push('#mt = :mt');
+    keyConditions.push('#mt = :mt'); // where clause of query
+    // #mt is a placeholder for attribute name month as month is reserved keyword
     attributeNames['#mt'] = 'month';
+    // :mt is placeholder for value
     attributeValues[':mt'] = month;
 
     if (day) {
-      // where clause of query
-      // #d is a placeholder for attribute name
-      // :d is placeholder for value
       keyConditions.push('#d = :d');
       attributeNames['#d'] = 'day';
       attributeValues[':d'] = day;

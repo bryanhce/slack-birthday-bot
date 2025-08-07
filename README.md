@@ -9,6 +9,7 @@ This project became an opportunity to kill two birds with one stone: solve my bi
 # Architecture
 
 ![Architecture diagram](public/architecture.png)
+[Link to edit](https://app.diagrams.net/#G1UXOuEishYcbdyUDMsKSUEiCA3ukWdwVl%23%7B%22pageId%22%3A%22okO-tkjk7Xb_Cq-q0_zo%22%7D)
 
 # Functional Requirements
 
@@ -40,7 +41,7 @@ This project became an opportunity to kill two birds with one stone: solve my bi
 # Things to potentially work on
 
 - Completed TODOs and enhancements
-- use github actions for CICD 
+- use github actions for CICD
 - create dev and prod versions of serverless
 - Look into improving the efficiency of the code
 - Improving validations eg do we want to differentiate between upper and lower case?
@@ -72,4 +73,3 @@ This project became an opportunity to kill two birds with one stone: solve my bi
   - Declaring it inside a method would mean it gets re-created every single time that method is called.
   - Declaring it outside a method means constants outside will only be created once per app/container lifetime
   - So for constants which will never change, placing it outside the class is the correct and standard practice
-

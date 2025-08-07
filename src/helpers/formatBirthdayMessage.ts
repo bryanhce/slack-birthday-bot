@@ -96,5 +96,3 @@ export function prependUserName(
 ): string {
   return prependText(`Hello <@${userName}>`, originalText);
 }
-
-
