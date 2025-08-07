@@ -8,12 +8,14 @@ import { formatBirthtdaysByMonth } from '../helpers/formatBirthdayMessage';
 import { logger } from '../logger/logger';
 
 async function handleListCommand(command: SlackCommand) {
-  const userId = command.user_id;
+  logger.info('Triggered handleListCommand');
+  const { userId } = command;
 
   try {
     const birthdayArr = await repository.getAllBirthdays(userId);
-    if (birthdayArr.length === 0)
+    if (birthdayArr.length === 0) {
       return createSuccessResponse("🥸 You don't have any birthday records!");
+    }
     return createSuccessResponse(formatBirthtdaysByMonth(birthdayArr));
   } catch (error) {
     logger.error('Error listing birthdays', error);

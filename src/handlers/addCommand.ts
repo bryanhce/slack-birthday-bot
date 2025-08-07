@@ -9,31 +9,36 @@ import {
 import { Birthday, SlackCommand } from '../types';
 
 const handleAddCommand = async (command: SlackCommand) => {
+  logger.info('Triggered handleAddCommand');
   const parsed = parseAddCommand(command.text);
   if (!parsed) {
     return createErrorResponse('Invalid format. Use `/add name #MM-DD`');
   }
 
-  const { date, name } = parsed;
-  if (!isValidDate(date)) {
+  const { name, month, day } = parsed;
+  if (!isValidDate(month, day)) {
     return createErrorResponse('Invalid birthday date. Follow #MM-DD');
   }
 
-  const existing = await repository.getBirthday(command.user_id, name);
+  const existing = await repository.getBirthday(command.userId, name);
   if (existing) {
     return createErrorResponse(`Birthday for ${name} is already registered.`);
   }
+  logger.info('Name does not exist in database, proceeding with insertion');
 
   const birthday: Birthday = {
     name,
-    user_id: command.user_id,
-    date,
+    userId: command.userId,
+    month,
+    day,
+    userName: command.userName,
+    channelId: command.channelId,
   };
 
   try {
     await repository.addBirthday(birthday);
     return createSuccessResponse(
-      `🎉 ${name}'s birthday has been added for ${date}!`
+      `🎉 ${name}'s birthday has been added for ${month}-${day}!`
     );
   } catch (error) {
     logger.error('Error adding birthday', error);

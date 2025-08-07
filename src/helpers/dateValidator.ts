@@ -6,24 +6,24 @@ function isValidMonthDayCombination(month: number, day: number): boolean {
   return day <= daysInMonth[month - 1];
 }
 
-function isValidDate(dateString: string): boolean {
+function isValidDate(monthStr: string, dayStr: string): boolean {
   const regex = /^\d{2}-\d{2}$/;
-  if (!regex.test(dateString)) {
-    logger.warn(`Invalid date format: ${dateString}`);
+  const dateStr = `${monthStr}-${dayStr}`;
+  if (!regex.test(dateStr)) {
+    logger.warn(`Invalid date format: ${dateStr}`);
     return false;
   }
 
-  const [monthStr, dayStr] = dateString.split('-');
   const month = parseInt(monthStr, 10);
   const day = parseInt(dayStr, 10);
 
   if (month < 1 || month > 12 || day < 1 || day > 31) {
-    logger.warn(`Date failed range check: ${dateString}`);
+    logger.warn(`Date failed range check: ${dateStr}`);
     return false;
   }
 
   if (!isValidMonthDayCombination(month, day)) {
-    logger.warn(`Invalid MM-DD combination: ${dateString}`);
+    logger.warn(`Invalid MM-DD combination: ${dateStr}`);
     return false;
   }
 

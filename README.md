@@ -29,7 +29,7 @@ TODO fill up
 
 - `npx serverless package` - to test locally, compiles and bundles app into `.esbuild/.serverless/` for inspection and also compiles the code to `.esbuild/.build`. Everytime code change, need to rerun this command.
 - `npx serverless deploy` - to deploy the aws resources
-- `npx serverless invoke local --function slackCommand --data '{"body": {"command": "/list", "user_id": "123"}}'` - test function locally without deploying. If you are testing locally, need to remember to run `npx serverless package` command
+- `npx serverless invoke local --function slackCommand --data '{"body": {"command": "/list", "userId": "123"}}'` - test function locally without deploying. If you are testing locally, need to remember to run `npx serverless package` command
 - `npx serverless invoke --function slackCommand` - test remotely after deployment
 - `npx serverless remove` - remove all deployed resources from AWS
 
@@ -49,10 +49,9 @@ TODO fill up
 
 - Use `Object.entries(record)` to iterate over key-value pairs eg type of `Record<string, string>`
 
-- async & await: 
+- async & await:
   - `await` can only be used in a function that is `async` (with the exception of top-level await in modern modules)
   - `await` blocks the execution of the async function. It does not block the entire program or the JavaScript thread. It only pauses the code within that specific async function.
   - `await` resolves or rejects (in event of error) the promise, ie returns the value
   - `async` forces a function to return a promise, no matter what, even if `await` is not used in the function body
   - When NOT in an async function: You must use `.then()` because `await` is not available. You get the promise object and attach callbacks to it.
-

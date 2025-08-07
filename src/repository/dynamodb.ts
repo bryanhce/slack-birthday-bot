@@ -5,6 +5,7 @@ import {
   DeleteCommand,
   QueryCommand,
   DynamoDBDocumentClient,
+  QueryCommandInput,
 } from '@aws-sdk/lib-dynamodb';
 
 import { Birthday } from '../types';
@@ -51,7 +52,7 @@ class BirthdayRepository {
     const command = new GetCommand({
       TableName: TABLE_NAME,
       Key: {
-        user_id: userId,
+        userId,
         name,
       },
     });
@@ -63,7 +64,7 @@ class BirthdayRepository {
   async getAllBirthdays(userId: string) {
     const command = new QueryCommand({
       TableName: TABLE_NAME,
-      KeyConditionExpression: 'user_id = :userId',
+      KeyConditionExpression: 'userId = :userId',
       ExpressionAttributeValues: {
         ':userId': userId,
       },
@@ -73,49 +74,37 @@ class BirthdayRepository {
     return (result.Items as Birthday[]) || [];
   }
 
-  async getBirthdaysByDate(date: string) {
-    const command = new QueryCommand({
+  async getBirthdaysByDate(month: string, day?: string) {
+    const params: QueryCommandInput = {
       TableName: TABLE_NAME,
-      IndexName: 'DateIndex',
-      // where clause of query, #dt is a placeholder for attribute name, can't directly
-      // use date here as date is a reserved keyword.
-      // :dt is placeholder for value
-      KeyConditionExpression: '#dt = :dt',
+      IndexName: 'MonthDayIndex',
+      // where clause of query
+      // #mt is a placeholder for attribute name
+      // :mt is placeholder for value
+      KeyConditionExpression: '#mt = :mt',
       ExpressionAttributeNames: {
-        '#dt': 'date',
+        '#mt': 'month',
       },
       ExpressionAttributeValues: {
-        ':dt': date,
+        ':mt': month,
       },
-    });
+    };
 
+    if (day) {
+      params.KeyConditionExpression += ' AND #d = :d';
+      params.ExpressionAttributeNames!['#d'] = 'day';
+      params.ExpressionAttributeValues![':d'] = day;
+    }
+    const command = new QueryCommand(params);
     const result = await docClient.send(command);
     return (result.Items as Birthday[]) || [];
   }
-
-  // TODO fix
-  // async getBirthdaysByMonth(month: string) {
-  //   const command = new QueryCommand({
-  //     TableName: TABLE_NAME,
-  //     IndexName: 'DateIndex',
-  //     KeyConditionExpression: '#dt = :dt',
-  //     ExpressionAttributeNames: {
-  //       '#dt': 'date',
-  //     },
-  //     ExpressionAttributeValues: {
-  //       ':dt': month,
-  //     },
-  //   });
-
-  //   const result = await docClient.send(command);
-  //   return (result.Items as Birthday[]) || [];
-  // }
 
   async removeBirthday(userId: string, name: string) {
     const command = new DeleteCommand({
       TableName: TABLE_NAME,
       Key: {
-        user_id: userId,
+        userId,
         name,
       },
     });

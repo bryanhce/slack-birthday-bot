@@ -7,5 +7,7 @@ export enum LogLevel {
 
 export interface LogContext {
   userId?: string;
+  userName?: string;
   command?: string;
+  channelId?: string;
 }

@@ -1,17 +1,16 @@
-import { Birthday } from "../types";
+import { Birthday } from '../types';
 
-function aggregateByUser(birthdays: Birthday[]) {
-  const groupByUser: Record<string, Birthday[]> = birthdays.reduce(
+function aggregateByChannel(birthdays: Birthday[]): Record<string, Birthday[]> {
+  return birthdays.reduce(
     (acc, bday) => {
-      if (!acc[bday.user_id]) {
-        acc[bday.user_id] = [];
+      if (!acc[bday.channelId]) {
+        acc[bday.channelId] = [];
       }
-      acc[bday.user_id].push(bday);
+      acc[bday.channelId].push(bday);
       return acc;
     },
     {} as Record<string, Birthday[]>
   );
-  return groupByUser;
 }
 
-export default aggregateByUser;
+export default aggregateByChannel;

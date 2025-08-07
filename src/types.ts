@@ -1,20 +1,23 @@
 // Left the other fields in the event we might want to use in the future
 export type SlackCommand = {
-  user_id: string;
-  user_name: string;
+  userId: string;
+  userName: string;
   command: string;
   text: string;
-  channel_id: string;
+  channelId: string;
   // token: string;
-  // team_id: string;
-  // team_domain: string;
-  // channel_name: string;
-  // response_url: string;
-  // trigger_id: string;
+  // teamId: string;
+  // teamDomain: string;
+  // channelName: string;
+  // responseUrl: string;
+  // triggerId: string;
 };
 
 export type Birthday = {
   name: string;
-  date: string; // MM-DD format
-  user_id: string;
+  month: string;
+  day: string;
+  userId: string;
+  userName: string;
+  channelId: string;
 };

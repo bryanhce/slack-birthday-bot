@@ -32,13 +32,21 @@ functions:
       - http:
           path: slack
           method: post
-  sameDayBirthdayReminder:
+  dailyReminder:
     handler: src/dailyReminder.default
     memorySize: 128
     ephemeralStorageSize: 512
     timeout: 5
     events:
+      # TODO check that its SGT and not some random UTC
       - schedule: cron(0 8 * * ? *)
+  monthlyReminder:
+    handler: src/monthlyReminder.default
+    memorySize: 128
+    ephemeralStorageSize: 512
+    timeout: 5
+    events:
+      - schedule: cron(59 7 1 * ? *)
 
 plugins:
   - serverless-esbuild
@@ -61,22 +69,26 @@ resources:
       Properties:
         TableName: ${self:custom.dynamodb_table}
         AttributeDefinitions:
-          - AttributeName: user_id
+          - AttributeName: userId
             AttributeType: S
           - AttributeName: name
             AttributeType: S
-          - AttributeName: date
+          - AttributeName: month
+            AttributeType: S
+          - AttributeName: day
             AttributeType: S
         KeySchema:
-          - AttributeName: user_id
+          - AttributeName: userId
             KeyType: HASH
           - AttributeName: name
             KeyType: RANGE
         GlobalSecondaryIndexes:
-          - IndexName: DateIndex
+          - IndexName: MonthDayIndex
             KeySchema:
-              - AttributeName: date
+              - AttributeName: month
                 KeyType: HASH
+              - AttributeName: day
+                KeyType: RANGE
             Projection:
               ProjectionType: ALL
         BillingMode: PAY_PER_REQUEST

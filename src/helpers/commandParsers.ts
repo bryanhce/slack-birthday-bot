@@ -3,7 +3,7 @@ import { Birthday } from '../types';
 
 export function parseAddCommand(
   text: string
-): Omit<Birthday, 'user_id'> | null {
+): Pick<Birthday, 'name' | 'month' | 'day'> | null {
   // Expected format: "namePart1 namePartN #MM-DD"
   const parts = text.trim().split(/#/);
   if (parts.length !== 2) {
@@ -12,8 +12,9 @@ export function parseAddCommand(
   }
 
   const [namePart, datePart] = parts;
+  const [month, day] = datePart.split(/-/);
 
-  return { name: namePart.trim(), date: datePart.trim() };
+  return { name: namePart.trim(), month: month.trim(), day: day.trim() };
 }
 
 export function parseRemoveCommand(text: string): string {

@@ -1,37 +1,39 @@
 import { repository } from './repository/dynamodb';
-import { Birthday } from './types';
 import dateToday from './helpers/dateToday';
-import { formatBirthdayByDay } from './helpers/formatBirthdayMessage';
+import {
+  formatBirthdayByDay,
+  prependUserName,
+} from './helpers/formatBirthdayMessage';
 import { logger } from './logger/logger';
 import sendSlackMessage from './slackInterface/sendMessage';
-import aggregateByUser from './helpers/aggregateByUser';
+import aggregateByChannel from './helpers/aggregateByUser';
 
-async function sameDayReminder() {
-  const queryDate = dateToday();
+async function dailyReminder() {
+  const [month, day] = dateToday();
 
   try {
-    const birthdays = await repository.getBirthdaysByDate(queryDate);
+    const birthdays = await repository.getBirthdaysByDate(month, day);
     if (birthdays.length === 0) {
-      logger.info(`No birthday reminders to send out for ${queryDate}`);
+      logger.info(`No birthday reminders to send out for ${month}-${day}`);
       return;
     }
 
-    const groupByUser: Record<string, Birthday[]> = aggregateByUser(birthdays)
+    const groupByChannel = aggregateByChannel(birthdays);
 
-    // enhancement: do multi threading if have sufficient traffic
-    const reminderPromises = Object.entries(groupByUser).map(
-      async ([userId, bdayArray]) => {
-        const text = formatBirthdayByDay(bdayArray);
-        await sendSlackMessage(text, userId);
-        logger.info(`Sent birthday reminder for ${userId}`);
+    const reminderPromises = Object.entries(groupByChannel).map(
+      async ([channelId, bdayArray]) => {
+        const { userName } = bdayArray[0];
+        const text = prependUserName(formatBirthdayByDay(bdayArray), userName);
+        await sendSlackMessage(text, channelId);
+        logger.info(`Sent birthday reminder for user ${userName}`);
       }
     );
     await Promise.all(reminderPromises);
 
-    logger.info(`Completed sending birthday reminders for ${queryDate}`);
+    logger.info(`Completed sending birthday reminders for ${month}-${day}`);
   } catch (error) {
-    logger.error('Error in sameDayReminder', error);
+    logger.error('Error in dailyReminder', error);
   }
 }
 
-export default sameDayReminder;
+export default dailyReminder;

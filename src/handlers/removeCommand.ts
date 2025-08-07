@@ -8,6 +8,7 @@ import {
 import { SlackCommand } from '../types';
 
 async function handleRemoveCommand(command: SlackCommand) {
+  logger.info('Triggered handleRemoveCommand');
   const name = parseRemoveCommand(command.text);
   if (!name) {
     return createErrorResponse(
@@ -17,14 +18,15 @@ async function handleRemoveCommand(command: SlackCommand) {
 
   try {
     const birthdayRecordExist = await repository.getBirthday(
-      command.user_id,
+      command.userId,
       name
     );
     if (!birthdayRecordExist) {
       return createSuccessResponse(`🫠 Birthday for ${name} does not exist...`);
     }
+    logger.info('Name exists in database, proceeding with deletion');
 
-    await repository.removeBirthday(command.user_id, name);
+    await repository.removeBirthday(command.userId, name);
     return createSuccessResponse(`🚯 Deleted ${name}'s birthday`);
   } catch (error) {
     logger.error('Error removing birthday', error);

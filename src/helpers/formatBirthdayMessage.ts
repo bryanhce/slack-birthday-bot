@@ -30,6 +30,10 @@ const shortMonthNames = [
   'Dec',
 ];
 
+type BirthdayStringArray = Array<
+  Omit<Birthday, 'userId' | 'userName' | 'channelId'>
+>;
+
 /**
  * Assume birthdays are all for 1 user
  * @param birthdays 
@@ -41,21 +45,18 @@ const shortMonthNames = [
     - another test: Dec 9
  */
 export function formatBirthtdaysByMonth(birthdays: Birthday[]): string {
-  const grouped: Record<
-    string,
-    Array<Omit<Birthday, 'user_id'>>
-  > = birthdays.reduce(
+  const grouped: Record<string, BirthdayStringArray> = birthdays.reduce(
     (acc, bday) => {
-      const monthStr = bday.date.split('-')[0];
-      if (!acc[monthStr]) {
-        acc[monthStr] = [];
+      if (!acc[bday.month]) {
+        acc[bday.month] = [];
       }
-      acc[monthStr].push(bday);
+      acc[bday.month].push(bday);
       return acc;
     },
-    {} as Record<string, Array<Omit<Birthday, 'user_id'>>>
+    {} as Record<string, BirthdayStringArray>
   );
 
+  // enhancement: parseInt is being done twice, can we reduce duplication?
   const formatted = Object.entries(grouped)
     .sort(([a], [b]) => parseInt(a, 10) - parseInt(b, 10)) // sort by month
     .map(([monthStr, entries]) => {
@@ -63,9 +64,8 @@ export function formatBirthtdaysByMonth(birthdays: Birthday[]): string {
       const fullMonthName = monthNames[monthIndex];
 
       const lines = entries
-        .sort((a, b) => a.date.localeCompare(b.date))
-        .map(({ name, date }) => {
-          const [mm, dd] = date.split('-');
+        .sort((a, b) => a.day.localeCompare(b.day))
+        .map(({ name, month: mm, day: dd }) => {
           const shortMonth = shortMonthNames[parseInt(mm, 10) - 1];
           return `- ${name}: ${shortMonth} ${parseInt(dd, 10)}`;
         });
@@ -84,4 +84,11 @@ export function formatBirthdayByDay(birthdays: Birthday[]): string {
   return birthdays
     .map((bday) => `🥳 It's ${bday.name}'s birthday today!`)
     .join('\n');
+}
+
+export function prependUserName(
+  originalText: string,
+  userName: string
+): string {
+  return `Hello <@${userName}>!\n${originalText}`;
 }

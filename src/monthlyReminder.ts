@@ -1,36 +1,42 @@
 import { repository } from './repository/dynamodb';
 import { Birthday } from './types';
 import dateToday from './helpers/dateToday';
-import { formatBirthtdaysByMonth } from './helpers/formatBirthdayMessage';
+import {
+  formatBirthtdaysByMonth,
+  prependUserName,
+} from './helpers/formatBirthdayMessage';
 import { logger } from './logger/logger';
 import sendSlackMessage from './slackInterface/sendMessage';
-import aggregateByUser from './helpers/aggregateByUser';
+import aggregateByChannel from './helpers/aggregateByUser';
 
 // TODO abstract into a parent reminder function
 async function monthlyReminder() {
-  const queryDate = dateToday();
+  const [month] = dateToday();
 
   try {
-    // TODO get birthdayByMonth
-    const birthdays = await repository.getBirthdaysByDate(queryDate);
+    const birthdays = await repository.getBirthdaysByDate(month);
     if (birthdays.length === 0) {
-      logger.info(`No birthday reminders to send out for month ${queryDate}`);
+      logger.info(`No birthday reminders to send out for ${month}`);
       return;
     }
 
-    const groupByUser: Record<string, Birthday[]> = aggregateByUser(birthdays)
+    const groupByChannel: Record<string, Birthday[]> =
+      aggregateByChannel(birthdays);
 
-    const reminderPromises = Object.entries(groupByUser).map(
-      async ([userId, bdayArray]) => {
-        const text = formatBirthtdaysByMonth(bdayArray);
-        await sendSlackMessage(text, userId);
-        logger.info(`Sent monthly birthday reminder for ${userId}`);
+    const reminderPromises = Object.entries(groupByChannel).map(
+      async ([channelId, bdayArray]) => {
+        const { userName } = bdayArray[0];
+        const text = prependUserName(
+          formatBirthtdaysByMonth(bdayArray),
+          userName
+        );
+        await sendSlackMessage(text, channelId);
+        logger.info(`Sent monthly birthday reminder for user ${userName}`);
       }
     );
     await Promise.all(reminderPromises);
 
-    // TODO change to month
-    logger.info(`Completed sending monthly birthday reminders for ${queryDate}`);
+    logger.info(`Completed sending monthly birthday reminders for ${month}`);
   } catch (error) {
     logger.error('Error in monthlyReminder', error);
   }
