@@ -1,5 +1,5 @@
 import { logger } from '../logger/logger';
-import { Birthday } from '../types';
+import { Birthday } from '../repository/types';
 
 export function parseAddCommand(
   text: string

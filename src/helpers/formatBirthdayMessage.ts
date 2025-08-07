@@ -1,4 +1,4 @@
-import { Birthday } from '../types';
+import { Birthday } from '../repository/types';
 
 const monthNames = [
   'January',

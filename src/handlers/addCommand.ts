@@ -6,7 +6,8 @@ import {
   createErrorResponse,
   createSuccessResponse,
 } from '../slackInterface/responses';
-import { Birthday, SlackCommand } from '../types';
+import { SlackCommand } from '../types';
+import { Birthday } from '../repository/types';
 
 const handleAddCommand = async (command: SlackCommand) => {
   logger.info('Triggered handleAddCommand');

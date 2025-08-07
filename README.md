@@ -6,6 +6,8 @@ I was using TimeTree to track my friends' birthdays, but the app kept letting me
 
 This project became an opportunity to kill two birds with one stone: solve my birthday tracking problem while diving into technologies I'd been wanting to explore. I'd been looking for an excuse to learn how to develop a Slack bot and wanted to experiment with serverless framework and architecture, so building a custom birthday reminder system seemed like the ideal way to get hands-on experience with both.
 
+Note: I know there are a couple of unnecessary comments in the code base, they are there to remind me of what the syntax is doing exactly!
+
 # Architecture
 
 ![Architecture diagram](public/architecture.png)
@@ -17,6 +19,7 @@ This project became an opportunity to kill two birds with one stone: solve my bi
 
 - /add
 - /list-all
+- /list-month
 - /remove-bday
 
 ## Cron jobs
@@ -73,3 +76,7 @@ This project became an opportunity to kill two birds with one stone: solve my bi
   - Declaring it inside a method would mean it gets re-created every single time that method is called.
   - Declaring it outside a method means constants outside will only be created once per app/container lifetime
   - So for constants which will never change, placing it outside the class is the correct and standard practice
+
+- Zod: a typescript validation library for run-time
+  - `return result.Items as Birthday[]` is a type assertion, not a validation. We are telling typescript to trust us that theis data will match `Birthday` type.
+  - This trust can be broken by malformed DynamoDB table

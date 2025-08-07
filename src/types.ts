@@ -1,4 +1,4 @@
-import BirthdayQueryOptionsByDate from './repository/types';
+import { Birthday, BirthdayQueryOptionsByDate } from './repository/types';
 
 // Left the other fields in the event we might want to use in the future
 export type SlackCommand = {
@@ -13,15 +13,6 @@ export type SlackCommand = {
   // channelName: string;
   // responseUrl: string;
   // triggerId: string;
-};
-
-export type Birthday = {
-  name: string;
-  month: string;
-  day: string;
-  userId: string;
-  userName: string;
-  channelId: string;
 };
 
 export type ReminderConfig = {

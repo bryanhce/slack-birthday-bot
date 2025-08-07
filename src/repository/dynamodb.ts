@@ -8,8 +8,14 @@ import {
   QueryCommandInput,
 } from '@aws-sdk/lib-dynamodb';
 
-import { Birthday } from '../types';
-import BirthdayQueryOptionsByDate from './types';
+import {
+  BirthdayQueryOptionsByDate,
+  Birthday,
+  BirthdayArraySchema,
+  BirthdaySchema,
+} from './types';
+import ENV from '../env';
+import safeParse from './parser';
 
 const client = new DynamoDBClient({});
 const marshallOptions = {
@@ -24,7 +30,7 @@ const docClient = DynamoDBDocumentClient.from(client, {
   marshallOptions,
   unmarshallOptions,
 });
-const TABLE_NAME = process.env.DYNAMODB_TABLE!;
+const TABLE_NAME = ENV.DYNAMODB_TABLE;
 
 // TODO improve the naming and see if we can make the methods more extensible
 
@@ -51,7 +57,10 @@ class BirthdayRepository {
     return docClient.send(command);
   }
 
-  async getBirthday(userId: string, name: string) {
+  async getBirthday(
+    userId: string,
+    name: string
+  ): Promise<Birthday | undefined> {
     const command = new GetCommand({
       TableName: TABLE_NAME,
       Key: {
@@ -61,7 +70,7 @@ class BirthdayRepository {
     });
 
     const result = await docClient.send(command);
-    return result.Item as Birthday | undefined;
+    return safeParse(result.Item, BirthdaySchema);
   }
 
   async getAllBirthdays(userId: string) {
@@ -74,7 +83,11 @@ class BirthdayRepository {
     });
 
     const result = await docClient.send(command);
-    return (result.Items as Birthday[]) || [];
+    const parsedBirthdays: Birthday[] | undefined = safeParse(
+      result.Items,
+      BirthdayArraySchema
+    );
+    return parsedBirthdays ?? [];
   }
 
   // TODO have to improve name
@@ -93,7 +106,11 @@ class BirthdayRepository {
     });
 
     const result = await docClient.send(command);
-    return (result.Items as Birthday[]) || [];
+    const parsedBirthdays: Birthday[] | undefined = safeParse(
+      result.Items,
+      BirthdayArraySchema
+    );
+    return parsedBirthdays ?? [];
   }
 
   async getBirthdaysByDate(options: BirthdayQueryOptionsByDate) {
@@ -126,7 +143,11 @@ class BirthdayRepository {
 
     const command = new QueryCommand(params);
     const result = await docClient.send(command);
-    return (result.Items as Birthday[]) || [];
+    const parsedBirthdays: Birthday[] | undefined = safeParse(
+      result.Items,
+      BirthdayArraySchema
+    );
+    return parsedBirthdays ?? [];
   }
 
   async removeBirthday(userId: string, name: string) {

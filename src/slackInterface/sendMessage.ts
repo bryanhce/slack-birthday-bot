@@ -1,7 +1,9 @@
 import { WebClient } from '@slack/web-api';
-import { logger } from '../logger/logger';
 
-const client = new WebClient(process.env.SLACK_BOT_TOKEN);
+import { logger } from '../logger/logger';
+import ENV from '../env';
+
+const client = new WebClient(ENV.SLACK_BOT_TOKEN);
 
 async function sendSlackMessage(text: string, channelId: string) {
   try {

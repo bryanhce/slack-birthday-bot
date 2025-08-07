@@ -1,4 +1,4 @@
-import { Birthday } from '../types';
+import { Birthday } from '../repository/types';
 
 function aggregateByChannel(birthdays: Birthday[]): Record<string, Birthday[]> {
   return birthdays.reduce(
