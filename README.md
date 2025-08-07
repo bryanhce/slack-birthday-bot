@@ -8,7 +8,7 @@ This project became an opportunity to kill two birds with one stone: solve my bi
 
 # Architecture
 
-TODO fill up
+![Architecture diagram](public/architecture.png)
 
 # Functional Requirements
 
@@ -67,3 +67,9 @@ TODO fill up
   - `await` resolves or rejects (in event of error) the promise, ie returns the value
   - `async` forces a function to return a promise, no matter what, even if `await` is not used in the function body
   - When NOT in an async function: You must use `.then()` because `await` is not available. You get the promise object and attach callbacks to it.
+
+- Declaring constants outside a class or method makes it a module-scoped constant. It is initialized only once when the file is first loaded, and it is available to everything else in that file.
+  - Declaring it inside a method would mean it gets re-created every single time that method is called.
+  - Declaring it outside a method means constants outside will only be created once per app/container lifetime
+  - So for constants which will never change, placing it outside the class is the correct and standard practice
+
