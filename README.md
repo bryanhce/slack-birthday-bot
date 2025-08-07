@@ -56,6 +56,7 @@ Note: I know there are a couple of unnecessary comments in the code base, they a
   - `KeySchema` defines how the table is indexed, need hash (partition) key and optionally range (sort) key
   - `AttributeDefinitions` defines the data types of the keys used in the `KeySchema` and only those keys. Additional attributes can be stored in your items, but don't include them in key schema
 - In serverless.yml lambda/function configuration, if you specify `events: -http:` it will automatically create an API Gateway endpoint that triggers this function
+- By default, the Serverless Framework creates ONE SINGLE IAM Role for ALL the functions defined within your serverless.yml file. Instead of you having to manually create the IAM Role and IAM Policy in CloudFormation syntax
 
 - `npm install` doesn't automatically remove unused packages, it only installs packages listed in `package.json`. Use `npm prune` to remove packages from `node_modules` directory that are not listed in the `package.json`.
 

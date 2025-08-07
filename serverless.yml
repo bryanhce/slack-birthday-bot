@@ -10,21 +10,32 @@ provider:
     SLACK_BOT_TOKEN: ${env:SLACK_BOT_TOKEN}
     # SLACK_SIGNING_SECRET: ${env:SLACK_SIGNING_SECRET} TODO check if i need this to increase security
     DYNAMODB_TABLE: ${self:custom.dynamodb_table}
-    # TODO
-  # iamRoleStatements:
-  #   - Effect: Allow
-  #     Action:
-  #       - dynamodb:Query
-  #       - dynamodb:Scan
-  #       - dynamodb:GetItem
-  #       - dynamodb:PutItem
-  #       - dynamodb:UpdateItem
-  #       - dynamodb:DeleteItem
-  #     Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+  iam:
+    role:
+      statements:
+      - Effect: Allow
+        Action:
+          - 'dynamodb:GetItem'
+          - 'dynamodb:BatchGetItem'
+          - 'dynamodb:Scan'
+          - 'dynamodb:Query'
+          - 'dynamodb:PutItem'
+          - 'dynamodb:UpdateItem'
+          - 'dynamodb:DeleteItem'
+          - 'dynamodb:BatchWriteItem'
+        Resource:
+          # Fn::GetAtt is CloudFormation intrinsic function to get ARN of table
+          # this yaml syntax [BirthdaysTable, Arn] is same as
+          # - BirthdaysTable
+          # - Arn
+          - 'Fn::GetAtt': [BirthdaysTable, Arn]
+          # Fn::Join is another CloudFormation function that concatenates strings
+          - 'Fn::Join': ['', ['Fn::GetAtt': [BirthdaysTable, Arn], '/index/*']]
 
 functions:
   slackCommand:
-    handler: src/slackCommand.default # if want to use src/slackCommand.handler, need to use named exports in file
+    # if want to use src/slackCommand.handler, need to use named exports in file
+    handler: src/slackCommand.default
     memorySize: 128 # in MB
     ephemeralStorageSize: 512 # in MB
     timeout: 5 # in seconds
