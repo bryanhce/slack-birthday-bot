@@ -4,10 +4,10 @@ export type SlackCommand = {
   user_name: string;
   command: string;
   text: string;
+  channel_id: string;
   // token: string;
   // team_id: string;
   // team_domain: string;
-  // channel_id: string;
   // channel_name: string;
   // response_url: string;
   // trigger_id: string;

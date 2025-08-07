@@ -4,6 +4,7 @@ import dateToday from './helpers/dateToday';
 import { formatBirthdayByDay } from './helpers/formatBirthdayMessage';
 import { logger } from './logger/logger';
 import sendSlackMessage from './slackInterface/sendMessage';
+import aggregateByUser from './helpers/aggregateByUser';
 
 async function sameDayReminder() {
   const queryDate = dateToday();
@@ -15,22 +16,12 @@ async function sameDayReminder() {
       return;
     }
 
-    const groupByUser: Record<string, Birthday[]> = birthdays.reduce(
-      (acc, bday) => {
-        if (!acc[bday.user_id]) {
-          acc[bday.user_id] = [];
-        }
-        acc[bday.user_id].push(bday);
-        return acc;
-      },
-      {} as Record<string, Birthday[]>
-    );
+    const groupByUser: Record<string, Birthday[]> = aggregateByUser(birthdays)
 
     // enhancement: do multi threading if have sufficient traffic
     const reminderPromises = Object.entries(groupByUser).map(
       async ([userId, bdayArray]) => {
         const text = formatBirthdayByDay(bdayArray);
-        logger.debug(JSON.stringify(text));
         await sendSlackMessage(text, userId);
         logger.info(`Sent birthday reminder for ${userId}`);
       }

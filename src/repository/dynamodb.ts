@@ -22,7 +22,6 @@ const docClient = DynamoDBDocumentClient.from(client, {
   marshallOptions,
   unmarshallOptions,
 });
-// const docClient = DynamoDBDocumentClient.from(client);
 const TABLE_NAME = process.env.DYNAMODB_TABLE!;
 
 /* eslint-disable class-methods-use-this */
@@ -93,6 +92,24 @@ class BirthdayRepository {
     const result = await docClient.send(command);
     return (result.Items as Birthday[]) || [];
   }
+
+  // TODO fix
+  // async getBirthdaysByMonth(month: string) {
+  //   const command = new QueryCommand({
+  //     TableName: TABLE_NAME,
+  //     IndexName: 'DateIndex',
+  //     KeyConditionExpression: '#dt = :dt',
+  //     ExpressionAttributeNames: {
+  //       '#dt': 'date',
+  //     },
+  //     ExpressionAttributeValues: {
+  //       ':dt': month,
+  //     },
+  //   });
+
+  //   const result = await docClient.send(command);
+  //   return (result.Items as Birthday[]) || [];
+  // }
 
   async removeBirthday(userId: string, name: string) {
     const command = new DeleteCommand({

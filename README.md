@@ -48,3 +48,11 @@ TODO fill up
   - prefer functional programming, use methods like `.forEach(), .map(), .reduce()`
 
 - Use `Object.entries(record)` to iterate over key-value pairs eg type of `Record<string, string>`
+
+- async & await: 
+  - `await` can only be used in a function that is `async` (with the exception of top-level await in modern modules)
+  - `await` blocks the execution of the async function. It does not block the entire program or the JavaScript thread. It only pauses the code within that specific async function.
+  - `await` resolves or rejects (in event of error) the promise, ie returns the value
+  - `async` forces a function to return a promise, no matter what, even if `await` is not used in the function body
+  - When NOT in an async function: You must use `.then()` because `await` is not available. You get the promise object and attach callbacks to it.
+

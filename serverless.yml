@@ -33,7 +33,7 @@ functions:
           path: slack
           method: post
   sameDayBirthdayReminder:
-    handler: src/sameDayReminder.default
+    handler: src/dailyReminder.default
     memorySize: 128
     ephemeralStorageSize: 512
     timeout: 5

@@ -11,6 +11,7 @@ async function getChannelId(userId: string): Promise<string | undefined> {
 async function sendSlackMessage(text: string, userId: string) {
   try {
     // TODO might need to change dynamoDB table to store channelId and userId?
+    // TODO might also need to get the @username
     const channelId = await getChannelId(userId);
     if (!channelId) {
       logger.error('Unable to open slack channel');
