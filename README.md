@@ -80,3 +80,5 @@ Note: I know there are a couple of unnecessary comments in the code base, they a
 - Zod: a typescript validation library for run-time
   - `return result.Items as Birthday[]` is a type assertion, not a validation. We are telling typescript to trust us that theis data will match `Birthday` type.
   - This trust can be broken by malformed DynamoDB table
+
+- Random unfounded heuristic: if you find yourself copy and pasting code a lot, its a sign that you should be using a function instead!

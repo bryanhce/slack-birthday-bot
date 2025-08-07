@@ -1,6 +1,6 @@
 import { parseRemoveCommand } from '../helpers/commandParsers';
-import { logger } from '../logger/logger';
-import { repository } from '../repository/dynamodb';
+import logger from '../logger/logger';
+import birthdayRepository from '../repository/dynamodb';
 import {
   createErrorResponse,
   createSuccessResponse,
@@ -17,7 +17,7 @@ async function handleRemoveCommand(command: SlackCommand) {
   }
 
   try {
-    const birthdayRecordExist = await repository.getBirthday(
+    const birthdayRecordExist = await birthdayRepository.findByKey(
       command.userId,
       name
     );
@@ -26,7 +26,7 @@ async function handleRemoveCommand(command: SlackCommand) {
     }
     logger.info('Name exists in database, proceeding with deletion');
 
-    await repository.removeBirthday(command.userId, name);
+    await birthdayRepository.delete(command.userId, name);
     return createSuccessResponse(`🚯 Deleted ${name}'s birthday`);
   } catch (error) {
     logger.error('Error removing birthday', error);

@@ -1,7 +1,7 @@
-import { repository } from './repository/dynamodb';
+import birthdayRepository from './repository/dynamodb';
 import aggregateByChannel from './helpers/aggregateByChannel';
 import { prependUserName } from './helpers/formatBirthdayMessage';
-import { logger } from './logger/logger';
+import logger from './logger/logger';
 import sendSlackMessage from './slackInterface/sendMessage';
 import { ReminderConfig } from './types';
 
@@ -10,7 +10,7 @@ async function sendBirthdayReminders(config: ReminderConfig) {
   const dateLogString = config.getDateLogString(dateArgs);
 
   try {
-    const birthdays = await repository.getBirthdaysByDate(dateArgs);
+    const birthdays = await birthdayRepository.findByMonthDay(dateArgs);
 
     if (birthdays.length === 0) {
       logger.info(

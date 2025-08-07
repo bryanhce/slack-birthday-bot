@@ -32,8 +32,6 @@ const docClient = DynamoDBDocumentClient.from(client, {
 });
 const TABLE_NAME = ENV.DYNAMODB_TABLE;
 
-// TODO improve the naming and see if we can make the methods more extensible
-
 /* eslint-disable class-methods-use-this */
 class BirthdayRepository {
   private static instance: BirthdayRepository;
@@ -48,7 +46,7 @@ class BirthdayRepository {
     return BirthdayRepository.instance;
   }
 
-  async addBirthday(birthday: Birthday) {
+  async upsert(birthday: Birthday) {
     const command = new PutCommand({
       TableName: TABLE_NAME,
       Item: birthday,
@@ -57,10 +55,7 @@ class BirthdayRepository {
     return docClient.send(command);
   }
 
-  async getBirthday(
-    userId: string,
-    name: string
-  ): Promise<Birthday | undefined> {
+  async findByKey(userId: string, name: string): Promise<Birthday | undefined> {
     const command = new GetCommand({
       TableName: TABLE_NAME,
       Key: {
@@ -73,7 +68,7 @@ class BirthdayRepository {
     return safeParse(result.Item, BirthdaySchema);
   }
 
-  async getAllBirthdays(userId: string) {
+  async findAllByUserId(userId: string) {
     const command = new QueryCommand({
       TableName: TABLE_NAME,
       KeyConditionExpression: 'userId = :userId',
@@ -83,6 +78,8 @@ class BirthdayRepository {
     });
 
     const result = await docClient.send(command);
+    // typescript can infer type is Birthday[] | undefined, but I put
+    // typing to remind myself
     const parsedBirthdays: Birthday[] | undefined = safeParse(
       result.Items,
       BirthdayArraySchema
@@ -90,8 +87,7 @@ class BirthdayRepository {
     return parsedBirthdays ?? [];
   }
 
-  // TODO have to improve name
-  async getBirthdaysByUserByMonth(userId: string, month: string) {
+  async findByUserAndMonth(userId: string, month: string) {
     const command = new QueryCommand({
       TableName: TABLE_NAME,
       KeyConditionExpression: 'userId = :userId',
@@ -113,7 +109,7 @@ class BirthdayRepository {
     return parsedBirthdays ?? [];
   }
 
-  async getBirthdaysByDate(options: BirthdayQueryOptionsByDate) {
+  async findByMonthDay(options: BirthdayQueryOptionsByDate) {
     const { month, day } = options;
 
     const keyConditions: string[] = [];
@@ -150,7 +146,7 @@ class BirthdayRepository {
     return parsedBirthdays ?? [];
   }
 
-  async removeBirthday(userId: string, name: string) {
+  async delete(userId: string, name: string) {
     const command = new DeleteCommand({
       TableName: TABLE_NAME,
       Key: {
@@ -164,5 +160,5 @@ class BirthdayRepository {
 }
 /* eslint-enable class-methods-use-this */
 
-// eslint-disable-next-line import/prefer-default-export
-export const repository = BirthdayRepository.getInstance();
+const birthdayRepository = BirthdayRepository.getInstance();
+export default birthdayRepository;

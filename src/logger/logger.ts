@@ -84,5 +84,5 @@ class Logger {
 }
 /* eslint-enable class-methods-use-this */
 
-// eslint-disable-next-line import/prefer-default-export
-export const logger = Logger.getInstance();
+const logger = Logger.getInstance();
+export default logger;

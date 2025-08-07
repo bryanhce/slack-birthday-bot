@@ -1,18 +1,18 @@
-import { repository } from '../repository/dynamodb';
+import birthdayRepository from '../repository/dynamodb';
 import {
   createErrorResponse,
   createSuccessResponse,
 } from '../slackInterface/responses';
 import { SlackCommand } from '../types';
 import { formatBirthtdaysByMonth } from '../helpers/formatBirthdayMessage';
-import { logger } from '../logger/logger';
+import logger from '../logger/logger';
 
 async function handleListCommand(command: SlackCommand) {
   logger.info('Triggered handleListCommand');
   const { userId } = command;
 
   try {
-    const birthdayArr = await repository.getAllBirthdays(userId);
+    const birthdayArr = await birthdayRepository.findAllByUserId(userId);
     if (birthdayArr.length === 0) {
       return createSuccessResponse("🥸 You don't have any birthday records!");
     }

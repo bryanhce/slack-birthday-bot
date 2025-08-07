@@ -1,11 +1,11 @@
-import { repository } from '../repository/dynamodb';
+import birthdayRepository from '../repository/dynamodb';
 import {
   createErrorResponse,
   createSuccessResponse,
 } from '../slackInterface/responses';
 import { SlackCommand } from '../types';
 import { formatBirthtdaysByMonth } from '../helpers/formatBirthdayMessage';
-import { logger } from '../logger/logger';
+import logger from '../logger/logger';
 import dateToday from '../helpers/dateToday';
 
 async function handleListMonthCommand(command: SlackCommand) {
@@ -14,7 +14,7 @@ async function handleListMonthCommand(command: SlackCommand) {
   const { month } = dateToday();
 
   try {
-    const birthdayArr = await repository.getBirthdaysByUserByMonth(
+    const birthdayArr = await birthdayRepository.findByUserAndMonth(
       userId,
       month
     );

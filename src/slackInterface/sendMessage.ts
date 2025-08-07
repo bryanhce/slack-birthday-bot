@@ -1,6 +1,6 @@
 import { WebClient } from '@slack/web-api';
 
-import { logger } from '../logger/logger';
+import logger from '../logger/logger';
 import ENV from '../env';
 
 const client = new WebClient(ENV.SLACK_BOT_TOKEN);

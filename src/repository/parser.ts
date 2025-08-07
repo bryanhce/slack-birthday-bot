@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { logger } from '../logger/logger';
+import logger from '../logger/logger';
 
 /**
  * Safely parses data with a Zod schema and logs a detailed error on failure.

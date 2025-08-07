@@ -1,7 +1,7 @@
 import { parseAddCommand } from '../helpers/commandParsers';
 import isValidDate from '../helpers/dateValidator';
-import { logger } from '../logger/logger';
-import { repository } from '../repository/dynamodb';
+import logger from '../logger/logger';
+import birthdayRepository from '../repository/dynamodb';
 import {
   createErrorResponse,
   createSuccessResponse,
@@ -21,7 +21,7 @@ const handleAddCommand = async (command: SlackCommand) => {
     return createErrorResponse('Invalid birthday date. Follow #MM-DD');
   }
 
-  const existing = await repository.getBirthday(command.userId, name);
+  const existing = await birthdayRepository.findByKey(command.userId, name);
   if (existing) {
     return createErrorResponse(`Birthday for ${name} is already registered.`);
   }
@@ -37,7 +37,7 @@ const handleAddCommand = async (command: SlackCommand) => {
   };
 
   try {
-    await repository.addBirthday(birthday);
+    await birthdayRepository.upsert(birthday);
     return createSuccessResponse(
       `🎉 ${name}'s birthday has been added for ${month}-${day}!`
     );

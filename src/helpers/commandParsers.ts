@@ -1,4 +1,4 @@
-import { logger } from '../logger/logger';
+import logger from '../logger/logger';
 import { Birthday } from '../repository/types';
 
 export function parseAddCommand(

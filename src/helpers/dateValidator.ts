@@ -1,4 +1,4 @@
-import { logger } from '../logger/logger';
+import logger from '../logger/logger';
 
 const daysInMonth = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
