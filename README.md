@@ -1,6 +1,10 @@
-# Slack brithday reminder bot
+# Slack Brithday Reminder Bot
 
-TODO fill up
+# Why I created this
+
+I was using TimeTree to track my friends' birthdays, but the app kept letting me down. Notifications arrived late or didn't come at all, and the constant ads were becoming unbearable. After missing another friend's birthday because of a failed reminder, I decided it was time to build my own solution.
+
+This project became an opportunity to kill two birds with one stone: solve my birthday tracking problem while diving into technologies I'd been wanting to explore. I'd been looking for an excuse to learn how to develop a Slack bot and wanted to experiment with serverless framework and architecture, so building a custom birthday reminder system seemed like the ideal way to get hands-on experience with both.
 
 # Architecture
 
@@ -17,7 +21,7 @@ TODO fill up
 ## Cron jobs
 
 - cron job to trigger 8am everyday for brithday reminders
-- cron job to rigger every last day of the month for next month's reminders
+- cron job to trigger 7.59am every first day of the month for monthly birthday reminders
 
 # How to run
 
@@ -32,6 +36,14 @@ TODO fill up
 - `npx serverless invoke local --function slackCommand --data '{"body": {"command": "/list", "userId": "123"}}'` - test function locally without deploying. If you are testing locally, need to remember to run `npx serverless package` command
 - `npx serverless invoke --function slackCommand` - test remotely after deployment
 - `npx serverless remove` - remove all deployed resources from AWS
+
+# Things to potentially work on
+
+- Completed TODOs and enhancements
+- use github actions for CICD 
+- create dev and prod versions of serverless
+- Look into improving the efficiency of the code
+- Improving validations eg do we want to differentiate between upper and lower case?
 
 # Areas of Growth
 

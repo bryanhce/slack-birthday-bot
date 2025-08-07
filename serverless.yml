@@ -8,7 +8,7 @@ provider:
   region: ap-southeast-1
   environment:
     SLACK_BOT_TOKEN: ${env:SLACK_BOT_TOKEN}
-    # SLACK_SIGNING_SECRET: ${env:SLACK_SIGNING_SECRET}
+    # SLACK_SIGNING_SECRET: ${env:SLACK_SIGNING_SECRET} TODO check if i need this to increase security
     DYNAMODB_TABLE: ${self:custom.dynamodb_table}
     # TODO
   # iamRoleStatements:
@@ -38,15 +38,16 @@ functions:
     ephemeralStorageSize: 512
     timeout: 5
     events:
-      # TODO check that its SGT and not some random UTC
-      - schedule: cron(0 8 * * ? *)
+      # every day 8am SGT
+      - schedule: cron(0 0 * * ? *)
   monthlyReminder:
     handler: src/monthlyReminder.default
     memorySize: 128
     ephemeralStorageSize: 512
     timeout: 5
     events:
-      - schedule: cron(59 7 1 * ? *)
+      # every 1st of the month 7.59am in SGT
+      - schedule: cron(59 23 31 * ? *)
 
 plugins:
   - serverless-esbuild

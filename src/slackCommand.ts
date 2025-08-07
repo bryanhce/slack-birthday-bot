@@ -10,7 +10,6 @@ import { logger } from './logger/logger';
 async function handler(
   event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> {
-  logger.clearContext(); // TODO do I really need this?
   try {
     const params = new URLSearchParams(event.body!);
     const command: SlackCommand = {
