@@ -8,6 +8,8 @@ on:
 permissions:
   checks: read
   contents: read
+  actions: write
+  workflow: write
 
 jobs:
   check-all:
