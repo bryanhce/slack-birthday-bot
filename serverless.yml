@@ -8,7 +8,7 @@ provider:
   region: ap-southeast-1
   environment:
     SLACK_BOT_TOKEN: ${env:SLACK_BOT_TOKEN}
-    # SLACK_SIGNING_SECRET: ${env:SLACK_SIGNING_SECRET} TODO check if i need this to increase security
+    SLACK_SIGNING_SECRET: ${env:SLACK_SIGNING_SECRET}
     DYNAMODB_TABLE: ${self:custom.dynamodb_table}
   iam:
     role:

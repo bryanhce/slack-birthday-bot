@@ -7,11 +7,15 @@ import handleAddCommand from './handlers/addCommand';
 import handleListCommand from './handlers/listCommand';
 import handleRemoveCommand from './handlers/removeCommand';
 import handleListMonthCommand from './handlers/listMonthCommand';
+import verifySlackRequest from './slackInterface/verifyRequest';
+import SlackVerificationError from './slackInterface/error';
 
 async function handler(
   event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> {
   try {
+    verifySlackRequest(event);
+
     const params = new URLSearchParams(event.body!);
     const command: SlackCommand = {
       userId: params.get('user_id') || '',
@@ -36,6 +40,14 @@ async function handler(
         return createErrorResponse('Unknown command');
     }
   } catch (error) {
+    if (error instanceof SlackVerificationError) {
+      logger.error('Error in Slack verification', error);
+      return {
+        statusCode: 403,
+        body: 'Reuquest Forbidden',
+      };
+    }
+
     logger.error('Error in slackCommand', error);
     return {
       statusCode: 500,
