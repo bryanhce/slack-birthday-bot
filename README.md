@@ -32,6 +32,7 @@ Note: I know there are a couple of unnecessary comments in the code base, they a
 ## App
 
 - `npm run deploy` - to deploy code on local to dev env
+  - by default the env is dev, if you want to change to prod for example use `npm run deploy --stage prod`
 
 ## For infrastructure
 
@@ -41,25 +42,45 @@ Note: I know there are a couple of unnecessary comments in the code base, they a
 - `npx serverless invoke --function slackCommand` - test remotely after deployment
 - `npx serverless remove` - remove all deployed resources from AWS
 
+# Deployment with Github Actions
+- TODO fill up
+
 # Things to potentially work on
 
 - Completed TODOs and enhancements
 - use github actions for CICD
-- create dev and prod versions of serverless
 - Look into improving the efficiency of the code
-- Improving validations eg do we want to differentiate between upper and lower case?
+- Create dev and prod versions of aws resource (won't do for now as might cost us money to have 2 envs running)
+- DynamoDB stores a lot of duplicate data, can consider normalizing it
 
 # Areas of Growth
 
+## Serverless framework
 - `serverless.yml` file is used by the Serverless Framework, a popular open-source tool to simplify deploying and managing serverless applications (mainly on AWS). It acts as your infrastructure-as-code (IaC) config, describing everything your app needs: functions, events, permissions, resources, etc.
+- Key sections in a `serverless.yml` file
+  - `service`: your project name
+  - `provider`: aws runtime, region, etc
+  - `functions`: defines lambda and its trigger
+  - `resource`: raw CloudFormation for other AWS resources (non-lambda infra).
+- How serverless works:
+  - When you run `serverless deploy`, it turns your `serverless.yml` into an AWS CloudFormation stack.
+  - Every resource in your resources: block gets created in that stack.
+  - When you remove something from `serverless.yml` and redeploy, CloudFormation:
+    - Compares the new template with the old one.
+    - Deletes resources that are managed by that stack.
+    - BUT if that resource is not actually managed by the stack anymore, it won’t be touched.
 - In serverless.yml dynamodb configuration
   - `KeySchema` defines how the table is indexed, need hash (partition) key and optionally range (sort) key
   - `AttributeDefinitions` defines the data types of the keys used in the `KeySchema` and only those keys. Additional attributes can be stored in your items, but don't include them in key schema
+
+### What serverless does behind the scenes for you
 - In serverless.yml lambda/function configuration, if you specify `events: -http:` it will automatically create an API Gateway endpoint that triggers this function
 - By default, the Serverless Framework creates ONE SINGLE IAM Role for ALL the functions defined within your serverless.yml file. Instead of you having to manually create the IAM Role and IAM Policy in CloudFormation syntax
+- CloudFormation Stack Generation: Converts your YAML into a valid CloudFormation template. Handles dependency ordering (e.g., S3 bucket before Lambda that uses it). Manages resource naming with unique suffixes to avoid clashes.
+- Lambda Packaging & Deployment. Zips your function code (plus node_modules or other deps). Uploads to a deployment bucket in S3 (auto-created if not present). Updates Lambda versions automatically, so you don’t overwrite existing ones without versioning.
+- Log Group Creation: Creates a CloudWatch Logs group per Lambda function. Sets default retention (can be overridden with logRetentionInDays).
 
-- `npm install` doesn't automatically remove unused packages, it only installs packages listed in `package.json`. Use `npm prune` to remove packages from `node_modules` directory that are not listed in the `package.json`.
-
+## Typescript
 - Airbnb ESLint discourages for loops in favour of functional array methods beacuse:
   - bundle size of for loops requires polyfills in older environments
   - prefer functional programming, use methods like `.forEach(), .map(), .reduce()`
@@ -82,4 +103,19 @@ Note: I know there are a couple of unnecessary comments in the code base, they a
   - `return result.Items as Birthday[]` is a type assertion, not a validation. We are telling typescript to trust us that theis data will match `Birthday` type.
   - This trust can be broken by malformed DynamoDB table
 
+## Github Actions
+- The node-version: '20' in the workflow is only for the CI/CD container. It's what version of Node.js gets installed in the GitHub Actions runner to execute your build commands
+- `npm ci` vs `npm i`
+  - npm ci is designed specifically for CI/CD environments and is better than npm install because:
+    - Installs directly from package-lock.json (faster, more reliable)
+    - Fails if package.json and package-lock.json are out of sync
+    - Automatically removes node_modules before installing (clean slate)
+    - Skips certain user-oriented features
+    - Generally 2x faster in CI environments
+
+## Misc
+- `npm install` doesn't automatically remove unused packages, it only installs packages listed in `package.json`. Use `npm prune` to remove packages from `node_modules` directory that are not listed in the `package.json`.
+
 - Random unfounded heuristic: if you find yourself copy and pasting code a lot, its a sign that you should be using a function instead!
+
+- There is versions in for aws lambdas, we should delete older versions not in use to avoid hitting the 75-version limit per function and save costs.

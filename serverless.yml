@@ -77,7 +77,10 @@ resources:
   Resources:
     BirthdaysTable:
       Type: AWS::DynamoDB::Table
-      DeletionPolicy: Retain # keeps table data instead of destroying on new deploy
+      # keeps table data instead of destroying on new deploy
+      # but also doesn't delete the table when u remove this resource
+      # from this serverless file
+      DeletionPolicy: Retain 
       Properties:
         TableName: ${self:custom.dynamodb_table}
         AttributeDefinitions:
