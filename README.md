@@ -44,7 +44,8 @@ Note: I know there are a couple of unnecessary comments in the code base, they a
 
 # Deployment with Github Actions
 
-- TODO fill up
+- The code will automatically deploy when a PR is merged to main or any pushes to main. Deployment will not be run on PRs.
+- The `security.yml` and `lint-and-format.yml` will run first. If they pass then `aggregator.yml` will run to trigger `deploy.yml` which will deploy to our aws dev env.
 
 # Things to potentially work on
 
