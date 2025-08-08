@@ -1,0 +1,59 @@
+name: Deploy to AWS and Cleanup
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: false
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Serverless CLI
+        run: npm install -g serverless
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-southeast-1
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Deploy to AWS
+        run: |
+          if [ "${GITHUB_REF##*/}" = "main" ]; then
+            sls deploy --stage prod
+          else
+            sls deploy --stage dev
+          fi
+
+      - name: Cleanup old Lambda versions
+        run: |
+          FUNCTIONS=$(aws lambda list-functions --query 'Functions[].FunctionName' --output text)
+          for fn in $FUNCTIONS; do
+            echo "Cleaning up old versions for $fn..."
+            # Get versions sorted by number, skip $LATEST, keep last 5
+            VERSIONS=$(aws lambda list-versions-by-function --function-name $fn \
+              --query 'Versions[?Version!=`"$LATEST"`].[Version]' --output text | sort -n)
+            COUNT=$(echo "$VERSIONS" | wc -w)
+            if [ $COUNT -gt 5 ]; then
+              TO_DELETE=$(echo "$VERSIONS" | head -n -5)
+              for ver in $TO_DELETE; do
+                echo "Deleting version $ver of $fn"
+                aws lambda delete-function --function-name $fn --qualifier $ver
+              done
+            fi
+          done
