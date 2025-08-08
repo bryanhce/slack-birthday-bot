@@ -11,6 +11,7 @@ Note: I know there are a couple of unnecessary comments in the code base, they a
 # Architecture
 
 ![Architecture diagram](public/architecture.png)
+
 [Link to edit](https://app.diagrams.net/#G1UXOuEishYcbdyUDMsKSUEiCA3ukWdwVl%23%7B%22pageId%22%3A%22okO-tkjk7Xb_Cq-q0_zo%22%7D)
 
 # Functional Requirements
