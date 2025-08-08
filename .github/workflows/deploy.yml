@@ -34,6 +34,9 @@ jobs:
 
       # currently only have 1 env which is dev
       - name: Deploy to AWS
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_SIGNING_SECRET: ${{ secrets.SLACK_SIGNING_SECRET }}
         run: |
           npm run deploy
 
