@@ -75,6 +75,7 @@ Note: I know there are a couple of unnecessary comments in the code base, they a
 - In serverless.yml dynamodb configuration
   - `KeySchema` defines how the table is indexed, need hash (partition) key and optionally range (sort) key
   - `AttributeDefinitions` defines the data types of the keys used in the `KeySchema` and only those keys. Additional attributes can be stored in your items, but don't include them in key schema
+- During deployment, serverless framework reads value of envvar from local env and generates a CloudFormation template that contains the actual envvar values. CloudFormation deploys the lambda function with these envvar configured securely as part of Lambda function configuration (not in code package in S3)
 
 ### What serverless does behind the scenes for you
 
