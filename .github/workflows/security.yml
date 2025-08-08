@@ -9,7 +9,6 @@ on:
 jobs:
   security-and-quality:
     runs-on: ubuntu-latest
-    if: true # TODO remove
 
     steps:
       - name: Checkout code
@@ -39,10 +38,22 @@ jobs:
       #   uses: github/codeql-action/analyze@v3
 
       # Scans for accidentally committed secrets
-      - name: Run TruffleHog OSS
+      # Scans only the diff between the previous commit and current HEAD
+      - name: Run TruffleHog OSS (Diff Scan)
         uses: trufflesecurity/trufflehog@main
         with:
           path: ./
-          base: main
+          base: ${{ github.event.before }}
           head: HEAD
           extra_args: --debug --only-verified
+        if: github.event_name == 'push' && github.event.before != '0000000000000000000000000000000000000000'
+
+      # Scans the diff between base and head of the PR
+      - name: Run TruffleHog OSS (PR Scan)
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.pull_request.base.sha }}
+          head: ${{ github.event.pull_request.head.sha }}
+          extra_args: --debug --only-verified
+        if: github.event_name == 'pull_request'

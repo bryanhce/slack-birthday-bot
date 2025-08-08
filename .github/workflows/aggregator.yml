@@ -1,0 +1,35 @@
+name: Aggregator
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  check-all:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for ESLint and Prettier Check
+        uses: lewagon/wait-on-check-action@v1.3.3
+        with:
+          ref: ${{ github.sha }}
+          check-name: 'ESLint and Prettier Check'
+          # special token automatically created by Github Actions for every workflow run
+          # does not require use to add anything manually
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
+
+      - name: Wait for Security Checks
+        uses: lewagon/wait-on-check-action@v1.3.3
+        with:
+          ref: ${{ github.sha }}
+          check-name: 'Security Checks'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
+
+      - name: Trigger Deploy Workflow
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: Deploy to AWS and Cleanup
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: main
