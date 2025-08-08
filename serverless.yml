@@ -13,24 +13,25 @@ provider:
   iam:
     role:
       statements:
-      - Effect: Allow
-        Action:
-          - 'dynamodb:GetItem'
-          - 'dynamodb:BatchGetItem'
-          - 'dynamodb:Scan'
-          - 'dynamodb:Query'
-          - 'dynamodb:PutItem'
-          - 'dynamodb:UpdateItem'
-          - 'dynamodb:DeleteItem'
-          - 'dynamodb:BatchWriteItem'
-        Resource:
-          # Fn::GetAtt is CloudFormation intrinsic function to get ARN of table
-          # this yaml syntax [BirthdaysTable, Arn] is same as
-          # - BirthdaysTable
-          # - Arn
-          - 'Fn::GetAtt': [BirthdaysTable, Arn]
-          # Fn::Join is another CloudFormation function that concatenates strings
-          - 'Fn::Join': ['', ['Fn::GetAtt': [BirthdaysTable, Arn], '/index/*']]
+        - Effect: Allow
+          Action:
+            - 'dynamodb:GetItem'
+            - 'dynamodb:BatchGetItem'
+            - 'dynamodb:Scan'
+            - 'dynamodb:Query'
+            - 'dynamodb:PutItem'
+            - 'dynamodb:UpdateItem'
+            - 'dynamodb:DeleteItem'
+            - 'dynamodb:BatchWriteItem'
+          Resource:
+            # Fn::GetAtt is CloudFormation intrinsic function to get ARN of table
+            # this yaml syntax [BirthdaysTable, Arn] is same as
+            # - BirthdaysTable
+            # - Arn
+            - 'Fn::GetAtt': [BirthdaysTable, Arn]
+            # Fn::Join is another CloudFormation function that concatenates strings
+            - 'Fn::Join':
+                ['', ['Fn::GetAtt': [BirthdaysTable, Arn], '/index/*']]
 
 functions:
   slackCommand:
@@ -80,7 +81,7 @@ resources:
       # keeps table data instead of destroying on new deploy
       # but also doesn't delete the table when u remove this resource
       # from this serverless file
-      DeletionPolicy: Retain 
+      DeletionPolicy: Retain
       Properties:
         TableName: ${self:custom.dynamodb_table}
         AttributeDefinitions:

@@ -43,6 +43,7 @@ Note: I know there are a couple of unnecessary comments in the code base, they a
 - `npx serverless remove` - remove all deployed resources from AWS
 
 # Deployment with Github Actions
+
 - TODO fill up
 
 # Things to potentially work on
@@ -56,6 +57,7 @@ Note: I know there are a couple of unnecessary comments in the code base, they a
 # Areas of Growth
 
 ## Serverless framework
+
 - `serverless.yml` file is used by the Serverless Framework, a popular open-source tool to simplify deploying and managing serverless applications (mainly on AWS). It acts as your infrastructure-as-code (IaC) config, describing everything your app needs: functions, events, permissions, resources, etc.
 - Key sections in a `serverless.yml` file
   - `service`: your project name
@@ -74,6 +76,7 @@ Note: I know there are a couple of unnecessary comments in the code base, they a
   - `AttributeDefinitions` defines the data types of the keys used in the `KeySchema` and only those keys. Additional attributes can be stored in your items, but don't include them in key schema
 
 ### What serverless does behind the scenes for you
+
 - In serverless.yml lambda/function configuration, if you specify `events: -http:` it will automatically create an API Gateway endpoint that triggers this function
 - By default, the Serverless Framework creates ONE SINGLE IAM Role for ALL the functions defined within your serverless.yml file. Instead of you having to manually create the IAM Role and IAM Policy in CloudFormation syntax
 - CloudFormation Stack Generation: Converts your YAML into a valid CloudFormation template. Handles dependency ordering (e.g., S3 bucket before Lambda that uses it). Manages resource naming with unique suffixes to avoid clashes.
@@ -81,6 +84,7 @@ Note: I know there are a couple of unnecessary comments in the code base, they a
 - Log Group Creation: Creates a CloudWatch Logs group per Lambda function. Sets default retention (can be overridden with logRetentionInDays).
 
 ## Typescript
+
 - Airbnb ESLint discourages for loops in favour of functional array methods beacuse:
   - bundle size of for loops requires polyfills in older environments
   - prefer functional programming, use methods like `.forEach(), .map(), .reduce()`
@@ -104,6 +108,7 @@ Note: I know there are a couple of unnecessary comments in the code base, they a
   - This trust can be broken by malformed DynamoDB table
 
 ## Github Actions
+
 - The node-version: '20' in the workflow is only for the CI/CD container. It's what version of Node.js gets installed in the GitHub Actions runner to execute your build commands
 - `npm ci` vs `npm i`
   - npm ci is designed specifically for CI/CD environments and is better than npm install because:
@@ -114,6 +119,7 @@ Note: I know there are a couple of unnecessary comments in the code base, they a
     - Generally 2x faster in CI environments
 
 ## Misc
+
 - `npm install` doesn't automatically remove unused packages, it only installs packages listed in `package.json`. Use `npm prune` to remove packages from `node_modules` directory that are not listed in the `package.json`.
 
 - Random unfounded heuristic: if you find yourself copy and pasting code a lot, its a sign that you should be using a function instead!

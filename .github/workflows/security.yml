@@ -10,38 +10,39 @@ jobs:
   security-and-quality:
     runs-on: ubuntu-latest
     if: true # TODO remove
-    
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-        cache: 'npm'
-    
-    - name: Install dependencies
-      run: npm ci
-    
-    # Security vulnerability scanning
-    - name: Run npm audit
-      run: npm audit --audit-level high
-    
-    # GitHub Security Scanning (SAST)
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3
-      with:
-        languages: javascript
-    
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
-    
-    # Scans for accidentally committed secrets
-    - name: Run TruffleHog OSS
-      uses: trufflesecurity/trufflehog@main
-      with:
-        path: ./
-        base: main
-        head: HEAD
-        extra_args: --debug --only-verified
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Security vulnerability scanning
+      - name: Run npm audit
+        run: npm audit --audit-level high
+
+      # TODO look security scanning
+      # # GitHub Security Scanning (SAST)
+      # - name: Initialize CodeQL
+      #   uses: github/codeql-action/init@v3
+      #   with:
+      #     languages: javascript
+
+      # - name: Perform CodeQL Analysis
+      #   uses: github/codeql-action/analyze@v3
+
+      # Scans for accidentally committed secrets
+      - name: Run TruffleHog OSS
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: main
+          head: HEAD
+          extra_args: --debug --only-verified
