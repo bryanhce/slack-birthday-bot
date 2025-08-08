@@ -17,7 +17,7 @@ jobs:
         uses: lewagon/wait-on-check-action@v1.3.3
         with:
           ref: ${{ github.sha }}
-          check-name: 'ESLint and Prettier Check'
+          check-name: 'lintAndFormat'
           # special token automatically created by Github Actions for every workflow run
           # does not require use to add anything manually
           repo-token: ${{ secrets.GITHUB_TOKEN }}
@@ -27,7 +27,7 @@ jobs:
         uses: lewagon/wait-on-check-action@v1.3.3
         with:
           ref: ${{ github.sha }}
-          check-name: 'Security Checks'
+          check-name: 'security-and-quality'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           wait-interval: 10
 
