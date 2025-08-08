@@ -7,7 +7,7 @@ on:
     branches: main
 
 jobs:
-  lintAndFormat:
+  lint-and-format:
     runs-on: ubuntu-latest
 
     steps:

@@ -17,7 +17,7 @@ jobs:
         uses: lewagon/wait-on-check-action@v1.3.3
         with:
           ref: ${{ github.sha }}
-          check-name: 'lintAndFormat'
+          check-name: 'lint-and-format'
           # special token automatically created by Github Actions for every workflow run
           # does not require use to add anything manually
           repo-token: ${{ secrets.GITHUB_TOKEN }}
@@ -34,6 +34,6 @@ jobs:
       - name: Trigger Deploy Workflow
         uses: benc-uk/workflow-dispatch@v1
         with:
-          workflow: Deploy to AWS and Cleanup
+          workflow: 'deploy'
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: main
