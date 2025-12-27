@@ -1,9 +1,9 @@
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import * as crypto from 'crypto';
 
-import ENV from '../env';
+import ENV from '../../env';
 import SlackVerificationError from './error';
-import logger from '../logger/logger';
+import logger from '../../logger/logger';
 
 const signingSecret = ENV.SLACK_SIGNING_SECRET;
 /**
@@ -12,6 +12,12 @@ const signingSecret = ENV.SLACK_SIGNING_SECRET;
  * @param {APIGatewayProxyEvent} event The Lambda event object.
  */
 function verifySlackRequest(event: APIGatewayProxyEvent): void {
+  if (!signingSecret) {
+    throw new SlackVerificationError(
+      'Server Error: SLACK_SIGNING_SECRET is not configured.'
+    );
+  }
+
   const requestTimestamp = event.headers['X-Slack-Request-Timestamp'];
   const slackSignature = event.headers['X-Slack-Signature'];
 

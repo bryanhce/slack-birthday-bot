@@ -1,7 +1,6 @@
-import { ReminderConfig } from './types';
+import sendBirthdayReminders, { ReminderConfig } from './baseReminder';
 import dateToday from './helpers/dateToday';
 import { formatBirthtdaysByMonth } from './helpers/formatBirthdayMessage';
-import sendBirthdayReminders from './baseReminder';
 
 const monthlyReminderConfig: ReminderConfig = {
   reminderType: 'monthly',

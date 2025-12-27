@@ -2,8 +2,16 @@ import birthdayRepository from './repository/dynamodb';
 import aggregateByChannel from './helpers/aggregateByChannel';
 import { prependUserName } from './helpers/formatBirthdayMessage';
 import logger from './logger/logger';
-import sendSlackMessage from './slackInterface/sendMessage';
-import { ReminderConfig } from './types';
+
+import { Birthday, BirthdayQueryOptionsByDate } from './repository/types';
+import createPlatform from './platforms/factory';
+
+export type ReminderConfig = {
+  reminderType: 'daily' | 'monthly';
+  getDateArgs: () => BirthdayQueryOptionsByDate;
+  formatMessage: (birthdays: Birthday[]) => string;
+  getDateLogString: (args: BirthdayQueryOptionsByDate) => string;
+};
 
 async function sendBirthdayReminders(config: ReminderConfig) {
   const dateArgs = config.getDateArgs();
@@ -27,7 +35,8 @@ async function sendBirthdayReminders(config: ReminderConfig) {
         const formattedBirthdays = config.formatMessage(bdayArray);
         const text = prependUserName(userName, formattedBirthdays);
 
-        await sendSlackMessage(text, channelId);
+        const platform = createPlatform(channelId);
+        await platform.sendMessage(text);
         logger.info(
           `Sent ${config.reminderType} birthday reminder for user ${userName}`
         );

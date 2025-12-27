@@ -1,7 +1,6 @@
 import dateToday from './helpers/dateToday';
 import { formatBirthdayByDay } from './helpers/formatBirthdayMessage';
-import { ReminderConfig } from './types';
-import sendBirthdayReminders from './baseReminder';
+import sendBirthdayReminders, { ReminderConfig } from './baseReminder';
 
 const dailyReminderConfig: ReminderConfig = {
   reminderType: 'daily',

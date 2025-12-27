@@ -1,17 +1,18 @@
+import { APIGatewayProxyResult } from 'aws-lambda';
 import { parseRemoveCommand } from '../helpers/commandParsers';
 import logger from '../logger/logger';
 import birthdayRepository from '../repository/dynamodb';
-import {
-  createErrorResponse,
-  createSuccessResponse,
-} from '../slackInterface/responses';
-import { SlackCommand } from '../types';
+import { BotCommand } from '../platforms/types';
+import Platform from '../platforms/platform';
 
-async function handleRemoveCommand(command: SlackCommand) {
+const handleRemoveCommand = async (
+  platform: Platform,
+  command: BotCommand
+): Promise<APIGatewayProxyResult> => {
   logger.info('Triggered handleRemoveCommand');
   const name = parseRemoveCommand(command.text);
   if (!name) {
-    return createErrorResponse(
+    return platform.createErrorResponse(
       'Invalid format. Use `/remove name`, name cannot be empty'
     );
   }
@@ -22,16 +23,22 @@ async function handleRemoveCommand(command: SlackCommand) {
       name
     );
     if (!birthdayRecordExist) {
-      return createSuccessResponse(`🫠 Birthday for ${name} does not exist...`);
+      return await platform.createSuccessResponse(
+        `🫠 Birthday for ${name} does not exist...`
+      );
     }
     logger.info('Name exists in database, proceeding with deletion');
 
     await birthdayRepository.delete(command.userId, name);
-    return createSuccessResponse(`🚯 Deleted ${name}'s birthday`);
+    return await platform.createSuccessResponse(
+      `🚯 Deleted ${name}'s birthday`
+    );
   } catch (error) {
     logger.error('Error removing birthday', error);
-    return createErrorResponse('Failed to remove birthday. Please try again.');
+    return platform.createErrorResponse(
+      'Failed to remove birthday. Please try again.'
+    );
   }
-}
+};
 
 export default handleRemoveCommand;

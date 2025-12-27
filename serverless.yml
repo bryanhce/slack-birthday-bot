@@ -1,4 +1,4 @@
-service: slack-birthday-bot
+service: birthday-bot
 frameworkVersion: '3'
 useDotenv: true
 
@@ -10,6 +10,9 @@ provider:
     SLACK_BOT_TOKEN: ${env:SLACK_BOT_TOKEN}
     SLACK_SIGNING_SECRET: ${env:SLACK_SIGNING_SECRET}
     DYNAMODB_TABLE: ${self:custom.dynamodb_table}
+    TELEGRAM_BOT_TOKEN: ${env:TELEGRAM_BOT_TOKEN}
+    TELEGRAM_SECRET_TOKEN: ${env:TELEGRAM_SECRET_TOKEN}
+    BOT_PLATFORM: ${env:BOT_PLATFORM}
   iam:
     role:
       statements:
@@ -28,21 +31,25 @@ provider:
             # this yaml syntax [BirthdaysTable, Arn] is same as
             # - BirthdaysTable
             # - Arn
-            - 'Fn::GetAtt': [BirthdaysTable, Arn]
-            # Fn::Join is another CloudFormation function that concatenates strings
-            - 'Fn::Join':
-                ['', ['Fn::GetAtt': [BirthdaysTable, Arn], '/index/*']]
+            # - 'Fn::GetAtt': [BirthdaysTable, Arn]
+            # # Fn::Join is another CloudFormation function that concatenates strings
+            # - 'Fn::Join':
+            #     ['', ['Fn::GetAtt': [BirthdaysTable, Arn], '/index/*']]
+
+            # above is old code to create the table, now since table is created, i am just referencing it here
+            - 'arn:aws:dynamodb:${self:provider.region}:${aws:accountId}:table/${self:custom.dynamodb_table}'
+            - 'arn:aws:dynamodb:${self:provider.region}:${aws:accountId}:table/${self:custom.dynamodb_table}/index/*'
 
 functions:
-  slackCommand:
-    # if want to use src/slackCommand.handler, need to use named exports in file
-    handler: src/slackCommand.default
+  command:
+    # if want to use src/command.handler, need to use named exports in file
+    handler: src/command.default
     memorySize: 128 # in MB
     ephemeralStorageSize: 512 # in MB
     timeout: 5 # in seconds
     events:
       - http:
-          path: slack
+          path: ''
           method: post
   dailyReminder:
     handler: src/dailyReminder.default
@@ -76,37 +83,38 @@ custom:
     platform: 'node'
   dynamodb_table: 'birthdays' # declaring a custom variable
 
-resources:
-  Resources:
-    BirthdaysTable:
-      Type: AWS::DynamoDB::Table
-      # keeps table data instead of destroying on new deploy
-      # but also doesn't delete the table when u remove this resource
-      # from this serverless file
-      DeletionPolicy: Retain
-      Properties:
-        TableName: ${self:custom.dynamodb_table}
-        AttributeDefinitions:
-          - AttributeName: userId
-            AttributeType: S
-          - AttributeName: name
-            AttributeType: S
-          - AttributeName: month
-            AttributeType: S
-          - AttributeName: day
-            AttributeType: S
-        KeySchema:
-          - AttributeName: userId
-            KeyType: HASH
-          - AttributeName: name
-            KeyType: RANGE
-        GlobalSecondaryIndexes:
-          - IndexName: MonthDayIndex
-            KeySchema:
-              - AttributeName: month
-                KeyType: HASH
-              - AttributeName: day
-                KeyType: RANGE
-            Projection:
-              ProjectionType: ALL
-        BillingMode: PAY_PER_REQUEST
+# commenting out as table no longer needs to be created
+# resources:
+#   Resources:
+#     BirthdaysTable:
+#       Type: AWS::DynamoDB::Table
+#       # keeps table data instead of destroying on new deploy
+#       # but also doesn't delete the table when u remove this resource
+#       # from this serverless file
+#       DeletionPolicy: Retain
+#       Properties:
+#         TableName: ${self:custom.dynamodb_table}
+#         AttributeDefinitions:
+#           - AttributeName: userId
+#             AttributeType: S
+#           - AttributeName: name
+#             AttributeType: S
+#           - AttributeName: month
+#             AttributeType: S
+#           - AttributeName: day
+#             AttributeType: S
+#         KeySchema:
+#           - AttributeName: userId
+#             KeyType: HASH
+#           - AttributeName: name
+#             KeyType: RANGE
+#         GlobalSecondaryIndexes:
+#           - IndexName: MonthDayIndex
+#             KeySchema:
+#               - AttributeName: month
+#                 KeyType: HASH
+#               - AttributeName: day
+#                 KeyType: RANGE
+#             Projection:
+#               ProjectionType: ALL
+#         BillingMode: PAY_PER_REQUEST

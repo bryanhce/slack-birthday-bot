@@ -1,14 +1,15 @@
+import { APIGatewayProxyResult } from 'aws-lambda';
 import birthdayRepository from '../repository/dynamodb';
-import {
-  createErrorResponse,
-  createSuccessResponse,
-} from '../slackInterface/responses';
-import { SlackCommand } from '../types';
 import { formatBirthtdaysByMonth } from '../helpers/formatBirthdayMessage';
 import logger from '../logger/logger';
 import dateToday from '../helpers/dateToday';
+import { BotCommand } from '../platforms/types';
+import Platform from '../platforms/platform';
 
-async function handleListMonthCommand(command: SlackCommand) {
+const handleListMonthCommand = async (
+  platform: Platform,
+  command: BotCommand
+): Promise<APIGatewayProxyResult> => {
   logger.info('Triggered handleListMonthCommand');
   const { userId } = command;
   const { month } = dateToday();
@@ -19,17 +20,19 @@ async function handleListMonthCommand(command: SlackCommand) {
       month
     );
     if (birthdayArr.length === 0) {
-      return createSuccessResponse(
+      return await platform.createSuccessResponse(
         "🥸 You don't have any birthdays for this month!"
       );
     }
-    return createSuccessResponse(formatBirthtdaysByMonth(birthdayArr));
+    return await platform.createSuccessResponse(
+      formatBirthtdaysByMonth(birthdayArr)
+    );
   } catch (error) {
     logger.error('Error listing monthly birthdays', error);
-    return createErrorResponse(
+    return platform.createErrorResponse(
       "Failed to list this month's birthdays. Please try again."
     );
   }
-}
+};
 
 export default handleListMonthCommand;

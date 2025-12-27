@@ -1,17 +1,19 @@
 {
-  "name": "slack-birthday-bot",
+  "name": "birthday-bot",
   "version": "1.0.0",
-  "description": "A Slack bot for managing birthday reminders",
+  "description": "A Slack/Telegram bot for managing birthday reminders",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "infra build": "npx serverless package",
-    "deploy": "npm run build && serverless deploy",
+    "deploy": "npm run build && serverless deploy && npm run setWebhook",
     "test": "jest",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "format": "prettier --check .",
-    "format:fix": "prettier --write ."
+    "format:fix": "prettier --write .",
+    "fmt": "npm run format:fix && npm run lint:fix",
+    "setWebhook": "ts-node scripts/setWebhook.ts"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.859.0",
@@ -20,12 +22,14 @@
     "@slack/web-api": "^7.9.3",
     "aws-lambda": "^1.0.7",
     "aws-sdk": "^2.1490.0",
+    "axios": "^1.13.2",
     "crypto": "^1.0.1",
+    "dotenv": "^17.2.3",
     "zod": "^4.0.15"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.126",
-    "@types/node": "^20.8.7",
+    "@types/node": "^20.19.27",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
     "eslint": "^8.57.1",
@@ -37,6 +41,7 @@
     "serverless": "^3.36.0",
     "serverless-esbuild": "^1.55.1",
     "serverless-plugin-typescript": "^2.1.4",
-    "typescript": "^5.2.2"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
   }
 }

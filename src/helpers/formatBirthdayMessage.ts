@@ -67,7 +67,7 @@ export function formatBirthtdaysByMonth(birthdays: Birthday[]): string {
         .sort((a, b) => a.day.localeCompare(b.day))
         .map(({ name, month: mm, day: dd }) => {
           const shortMonth = shortMonthNames[parseInt(mm, 10) - 1];
-          return `* ${name}: ${shortMonth} ${parseInt(dd, 10)}`;
+          return `- ${name}: ${shortMonth} ${parseInt(dd, 10)}`;
         });
 
       return `*${fullMonthName}*\n${lines.join('\n')}`;
@@ -94,5 +94,5 @@ export function prependUserName(
   userName: string,
   originalText: string
 ): string {
-  return prependText(`Hello <@${userName}>`, originalText);
+  return prependText(`Hello @${userName}`, originalText);
 }

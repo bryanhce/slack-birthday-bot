@@ -37,6 +37,10 @@ jobs:
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
           SLACK_SIGNING_SECRET: ${{ secrets.SLACK_SIGNING_SECRET }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_SECRET_TOKEN: ${{ secrets.TELEGRAM_SECRET_TOKEN }}
+          BOT_PLATFORM: ${{ secrets.BOT_PLATFORM }}
+          API_GATEWAY_URL: ${{ secrets.API_GATEWAY_URL }}
         run: |
           npm run deploy
 
