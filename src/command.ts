@@ -27,11 +27,11 @@ async function handler(
     switch (command.command) {
       case '/add':
         return await handleAddCommand(platform, command);
-      case '/list-all':
+      case '/listAll':
         return await handleListCommand(platform, command);
-      case '/list-month':
+      case '/listMonth':
         return await handleListMonthCommand(platform, command);
-      case '/remove-bday':
+      case '/remove':
         return await handleRemoveCommand(platform, command);
       default:
         logger.warn('No command');
