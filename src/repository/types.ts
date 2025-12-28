@@ -11,6 +11,7 @@ export const BirthdaySchema = z.object({
   month: z.string(),
   day: z.string(),
   channelId: z.string(),
+  // keeping userName for slack bot so that there is notification by default
   userName: z.string(),
 });
 export const BirthdayArraySchema = z.array(BirthdaySchema);
