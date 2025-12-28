@@ -27,9 +27,9 @@ async function handler(
     switch (command.command) {
       case '/add':
         return await handleAddCommand(platform, command);
-      case '/listAll':
+      case '/listall':
         return await handleListCommand(platform, command);
-      case '/listMonth':
+      case '/listmonth':
         return await handleListMonthCommand(platform, command);
       case '/remove':
         return await handleRemoveCommand(platform, command);
