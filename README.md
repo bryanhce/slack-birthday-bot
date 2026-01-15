@@ -1,6 +1,7 @@
 # Slack Brithday Reminder Bot
 
-## Update: I am migrating to Telegram Bot instead so I don't have to have Slack download on my mobile. But I feel like telegram and slack bots are quite different, I should have done 2 separate apps but they share the same utils for database accessing and parsing. All else should be kept separate. Anyway, the Slack bot has been deprecated and lambdas have been deleted. Now this app only supports telegram bot.
+## Update: 
+I am migrating to Telegram Bot instead so I don't have to have Slack download on my mobile. But I feel like telegram and slack bots are quite different, I should have done 2 separate apps but they share the same utils for database accessing and parsing. All else should be kept separate. Anyway, the Slack bot has been deprecated and lambdas have been deleted. Now this app only supports telegram bot.
 
 Btw, dynamodb is no longer being managed by iac (my bad). I deployed a new lambda via serverless when i should have created another file, but i reused the file and it override the old state
 
@@ -55,10 +56,8 @@ Note: I know there are a couple of unnecessary comments in the code base, they a
 # Things to potentially work on
 
 - Completed TODOs and enhancements
-- use github actions for CICD
 - Look into improving the efficiency of the code
-- Create dev and prod versions of aws resource (won't do for now as might cost us money to have 2 envs running)
-- DynamoDB stores a lot of duplicate data, can consider normalizing it
+- DynamoDB stores some of duplicate data, can consider normalizing it
 
 # Areas of Growth
 
