@@ -1,6 +1,7 @@
 # Slack Brithday Reminder Bot
 
-## Update: 
+## Update:
+
 I am migrating to Telegram Bot instead so I don't have to have Slack download on my mobile. But I feel like telegram and slack bots are quite different, I should have done 2 separate apps but they share the same utils for database accessing and parsing. All else should be kept separate. Anyway, the Slack bot has been deprecated and lambdas have been deleted. Now this app only supports telegram bot.
 
 Btw, dynamodb is no longer being managed by iac (my bad). I deployed a new lambda via serverless when i should have created another file, but i reused the file and it override the old state
